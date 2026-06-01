@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div>
         <h1>
-          Welcome to Pizza Shop
+          Welcome to pizza shop
         </h1>
         <Button
         onClick={() => alert("hello")}>
