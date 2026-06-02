@@ -4,7 +4,7 @@ import ToppingCard, { Topping } from './topping-card';
 
 const toppings = [
     { id: '1', name: 'Chicken', image: '/chicken.png', price: 50, isAvailable: true },
-    { id: '2', name: 'jelapeno', image: '/Jelapeno.png', price: 50, isAvailable: true },
+    { id: '2', name: 'Jelapeno', image: '/jelapeno.png', price: 50, isAvailable: true },
     { id: '3', name: 'Cheese', image: '/cheese.png', price: 50, isAvailable: true },
 ];
 
