@@ -1,14 +1,23 @@
-"use client"
-
-import { useState } from "react"
 import Link from "next/link"
 import { SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem, Select } from "../ui/select"
-import { Phone, ShoppingBasket, Menu as MenuIcon, X } from "lucide-react"
+import { Phone, ShoppingBasket } from "lucide-react"
 import { Button } from "../ui/button"
+import MobileMenu from "./mobile-menu"
+import { Tenant } from "@/lib/types"
 
-const Header = () => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+const Header = async () => {
+  const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
+    next: {
+      revalidate: 3600 
+    }
+  })
 
+  if(!tenantResponse.ok){
+    throw new Error("Failed to fetch tenants")
+  }
+
+  const restaurants: {data: Tenant[]} = await tenantResponse.json();
+  
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -35,9 +44,11 @@ const Header = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectItem value="cheesy-delight">Cheesy Delight</SelectItem>
-                <SelectItem value="pizza-hut">Pizza Hut</SelectItem>
-                <SelectItem value="kids-corner">Kids corner</SelectItem>
+                {
+                  restaurants.data.map((restaurant) => {
+                    return <SelectItem key={restaurant.id} value={restaurant.id}>{restaurant.name}</SelectItem>
+                  })
+                }
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -73,66 +84,8 @@ const Header = () => {
           </Button>
         </div>
 
-        {/* Mobile Controls (md:hidden) */}
-        <div className="flex md:hidden items-center gap-4">
-          <div className="relative">
-            <Link href="/cart">
-              <ShoppingBasket className="hover:text-primary transition-colors h-6 w-6" />
-            </Link>
-            <span className="absolute -top-3 -right-3 h-5 w-5 flex items-center justify-center rounded-full bg-primary font-bold text-white text-xs">
-              3
-            </span>
-          </div>
-
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-1 text-gray-600 hover:text-primary focus:outline-none transition-colors"
-            aria-label="Toggle Menu"
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-          </button>
-        </div>
+        <MobileMenu />
       </nav>
-
-      {/* Mobile Slide-down Menu Container */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white shadow-inner animate-in slide-in-from-top duration-200">
-          <div className="px-4 py-6 space-y-6 flex flex-col">
-            <ul className="space-y-4 font-semibold text-lg text-gray-800">
-              <li>
-                <Link
-                  href="/"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block hover:text-primary transition-colors py-1"
-                >
-                  Menu
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block hover:text-primary transition-colors py-1"
-                >
-                  Orders
-                </Link>
-              </li>
-            </ul>
-
-            <div className="flex items-center gap-3 py-3 border-t border-b border-gray-100 font-medium text-gray-700">
-              <Phone className="h-5 w-5 text-primary" />
-              <span>+91 9800 098 998</span>
-            </div>
-
-            <Button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full py-6 rounded-full font-bold text-base shadow-md shadow-primary/10"
-            >
-              Logout
-            </Button>
-          </div>
-        </div>
-      )}
     </header>
   )
 }
