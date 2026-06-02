@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Image from "next/image"
 import ToppingList from "./topping-list"
+import { Button } from "@/components/ui/button"
+import { ShoppingCart } from "lucide-react"
 
 
 
@@ -158,6 +160,18 @@ const ProductCard = ({
       </div>
 
         <ToppingList />
+
+        <div className="mt-12 flex items-center justify-between">
+            <span className="font-bold">
+                ₹ {product.price}
+            </span>
+            <Button>
+                <ShoppingCart size={`20`} />
+                <span className="ml-2">
+                    Add to cart
+                </span>
+            </Button>
+        </div>
 
         </div>
         </div>  
