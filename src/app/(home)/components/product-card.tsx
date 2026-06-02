@@ -35,7 +35,7 @@ const ProductCard = ({
   return (
     <Card>
   <CardHeader className="flex items-center justify-center">
-    <Image src={product.image} alt="pizza-image" height={150} width={150} />
+    <Image src={product.image} alt="pizza-image" height={150} width={150} className="h-24 w-24 sm:h-[150px] sm:w-[150px]" />
   </CardHeader>
   <CardContent>
     <h2 className="text-xl font-bold">
@@ -59,27 +59,28 @@ const ProductCard = ({
   <DialogTrigger
   className="bg-orange-500 hover:bg-orange-500/90 text-white px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
   >Choose</DialogTrigger>
-  <DialogContent className="max-w-3xl p-0">
-    <div className="flex">
-      <div className="w-1/3 bg-white rounded p-8 flex items-center justify-center">
+  <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-3xl p-0">
+    <div className="flex flex-col md:flex-row">
+      <div className="w-full md:w-1/3 bg-white rounded p-4 md:p-8 flex items-center justify-center">
         <Image
         src={'/pizza-main.png'}
         alt={product.name}
-        height={450}
-        width={450}
+        height={300}
+        width={300}
+        className="object-contain h-28 w-28 sm:h-[180px] sm:w-[180px] md:h-[300px] md:w-[300px]"
         />
       </div>
-      <div className="w-2/3 p-8 bg-muted">
+      <div className="w-full md:w-2/3 p-4 md:p-8 bg-muted">
          <h3 className="text-xl font-bold">{product.name}</h3>
          <p className="mt-1">{product.description}</p>
 
       <div>
-        <h4 className="mt-6">
+        <h4 className="mt-4 md:mt-6">
           Choose the size
         </h4>
       <RadioGroup
                                         defaultValue="small"
-                                        className="grid grid-cols-3 gap-4 mt-2">
+                                        className="grid grid-cols-3 gap-2 md:gap-4 mt-2">
                                         <div>
                                             <RadioGroupItem
                                                 value="small"
@@ -89,7 +90,7 @@ const ProductCard = ({
                                             />
                                             <Label
                                                 htmlFor="small"
-                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-2 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                                 Small
                                             </Label>
                                         </div>
@@ -103,7 +104,7 @@ const ProductCard = ({
                                             />
                                             <Label
                                                 htmlFor="medium"
-                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-2 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                                 Medium
                                             </Label>
                                         </div>
@@ -117,7 +118,7 @@ const ProductCard = ({
                                             />
                                             <Label
                                                 htmlFor="large"
-                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-2 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                                 Large
                                             </Label>
                                         </div>
@@ -125,10 +126,10 @@ const ProductCard = ({
                                 </div>
 
                                 <div>
-                                    <h4 className="mt-6">Choose the crust</h4>
+                                    <h4 className="mt-4 md:mt-6">Choose the crust</h4>
                                     <RadioGroup
                                         defaultValue="thin"
-                                        className="grid grid-cols-3 gap-4 mt-2">
+                                        className="grid grid-cols-2 gap-2 md:gap-4 mt-2">
                                         <div>
                                             <RadioGroupItem
                                                 value="thin"
@@ -138,7 +139,7 @@ const ProductCard = ({
                                             />
                                             <Label
                                                 htmlFor="thin"
-                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-2 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                                 Thin
                                             </Label>
                                         </div>
@@ -152,7 +153,7 @@ const ProductCard = ({
                                             />
                                             <Label
                                                 htmlFor="thick"
-                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-2 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                                 Thick
                                             </Label>
                                         </div>
@@ -161,11 +162,11 @@ const ProductCard = ({
 
         <ToppingList />
 
-        <div className="mt-12 flex items-center justify-between">
-            <span className="font-bold">
+        <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="font-bold text-lg">
                 ₹ {product.price}
             </span>
-            <Button>
+            <Button className="w-full sm:w-auto">
                 <ShoppingCart size={`20`} />
                 <span className="ml-2">
                     Add to cart

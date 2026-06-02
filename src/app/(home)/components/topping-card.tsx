@@ -24,10 +24,10 @@ const ToppingCard = ({ topping, selectedToppings, handleCheckBoxCheck }: PropTyp
             onClick={() => handleCheckBoxCheck(topping)}
             variant={'outline'}
             className={cn(
-                'flex flex-col h-42 relative',
+                'flex flex-col h-auto md:h-42 relative py-2 md:py-4',
                 isCurrentSelected ? 'border-primary' : ''
             )}>
-            <Image src={topping.image} width={80} height={80} alt={topping.name} />
+            <Image src={topping.image} width={60} height={60} className="md:w-[80px] md:h-[80px]" alt={topping.name} />
             <h4>{topping.name}</h4>
             <p>&#8377;{topping.price}</p>
             {isCurrentSelected && <CircleCheck className="absolute top-1 right-1 text-primary" />}
