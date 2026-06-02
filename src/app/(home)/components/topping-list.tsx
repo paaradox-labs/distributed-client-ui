@@ -23,9 +23,9 @@ const ToppingList = () => {
     };
 
     return (
-        <section className="mt-6">
+        <section className="mt-4 md:mt-6">
             <h3>Extra toppings</h3>
-            <div className="grid grid-cols-3 gap-4 mt-2">
+            <div className="grid grid-cols-3 gap-2 md:gap-4 mt-2">
                 {toppings.map((topping) => {
                     return (
                         <ToppingCard
