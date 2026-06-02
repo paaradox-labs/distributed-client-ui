@@ -13,6 +13,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import Image from "next/image"
+import ToppingList from "./topping-list"
 
 
 
@@ -54,11 +55,11 @@ const ProductCard = ({
     <Dialog>
         <DialogTitle className="sr-only"/>
   <DialogTrigger
-  className="bg-orange-300 hover:bg-orange-300 text-orange-500 px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
+  className="bg-orange-500 hover:bg-orange-500/90 text-white px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
   >Choose</DialogTrigger>
   <DialogContent className="max-w-3xl p-0">
     <div className="flex">
-      <div className="w-1/3 bg-white rounded p-8 flex-items-center justify-center">
+      <div className="w-1/3 bg-white rounded p-8 flex items-center justify-center">
         <Image
         src={'/pizza-main.png'}
         alt={product.name}
@@ -155,8 +156,11 @@ const ProductCard = ({
                                         </div>
                                     </RadioGroup>
       </div>
-      </div>
-    </div>  
+
+        <ToppingList />
+
+        </div>
+        </div>  
   </DialogContent>
 </Dialog>
   </CardFooter>
