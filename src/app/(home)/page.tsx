@@ -1,5 +1,5 @@
 "use client"
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -39,6 +39,19 @@ export default function Home() {
           </div>
         </div>
       </section>  
+
+    <section>
+      <div  className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
+          <Tabs defaultValue="pizza">
+    <TabsList>
+      <TabsTrigger value="pizza" className="text-md">Pizza</TabsTrigger>
+      <TabsTrigger value="beverages" className="text-md">Beverages</TabsTrigger>
+    </TabsList>
+    <TabsContent value="pizza">Pizza List.</TabsContent>
+    <TabsContent value="beverages">Beverages List.</TabsContent>
+</Tabs>
+      </div>
+    </section>
     </>
   );
 }
