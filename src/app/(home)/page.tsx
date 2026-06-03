@@ -1,49 +1,32 @@
-"use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ProductCard, { Product } from "./components/product-card";
+import ProductCard from "./components/product-card";
+import { Category, Product } from "@/lib/types";
 
-const products: Product[] = [
-    {
-        id: '1',
-        name: 'Margarita Pizza',
-        description: 'This is a very tasty pizza',
-        image: '/pizza-main.png',
-        price: 500,
-    },
-    {
-        id: '2',
-        name: 'Margarita Pizza',
-        description: 'This is a very tasty pizza',
-        image: '/pizza-main.png',
-        price: 500,
-    },
-    {
-        id: '3',
-        name: 'Margarita Pizza',
-        description: 'This is a very tasty pizza',
-        image: '/pizza-main.png',
-        price: 500,
-    },
-    {
-        id: '4',
-        name: 'Margarita Pizza',
-        description: 'This is a very tasty pizza',
-        image: '/pizza-main.png',
-        price: 500,
-    },
-    {
-        id: '5',
-        name: 'Margarita Pizza',
-        description: 'This is a very tasty pizza',
-        image: '/pizza-main.png',
-        price: 500,
-    },
-];
+export default async function Home() {
+  // todo: do concurrent reqs -> Promise.all()
+  const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
+    next:{
+      revalidate: 3600
+    }
+  })
 
+  if(!categoryResponse.ok){
+    throw new Error("Failed to fetch categories")
+  }
 
-export default function Home() {
+  const categories: Category[] = await categoryResponse.json()
+
+  // todo: Add pagination & Add dynamic tenandID
+  const productsResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?limit=100&tenantId=4`, {
+    next:{
+      revalidate: 3600
+    }
+  })
+
+  const products: {data: Product[]} = await productsResponse.json()
+  
   return (
     <>
       <section className="bg-white overflow-hidden">
@@ -82,25 +65,29 @@ export default function Home() {
 
     <section>
       <div  className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
-          <Tabs defaultValue="pizza">
+          <Tabs defaultValue={categories[0]._id}>
     <TabsList>
-      <TabsTrigger value="pizza" className="text-md">Pizza</TabsTrigger>
-      <TabsTrigger value="beverages" className="text-md">Beverages</TabsTrigger>
+      {
+        categories.map((category) => {
+          return (
+                  <TabsTrigger value={category._id} key={category._id} className="text-md">{category.name}</TabsTrigger>
+          )
+        })
+      }
     </TabsList>
-    <TabsContent value="pizza">
+    {
+      categories.map((category) => {
+        return (
+          <TabsContent key={category._id} value={category._id}>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-      {products.map((product) => (
-        <ProductCard product={product} key={product.id} />
+        {products.data.filter(product => product.category._id ===   category._id).map((product) => (
+        <ProductCard product={product} key={product._id} />
       ))}
     </div>
     </TabsContent>
-    <TabsContent value="beverages">
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-      {products.map((product) => (
-        <ProductCard product={product} key={product.id} />
-      ))}
-    </div>
-    </TabsContent>
+        )
+      })
+    }
 </Tabs>
       </div>
     </section>
