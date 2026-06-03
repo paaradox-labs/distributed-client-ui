@@ -25,18 +25,26 @@ const ProductCard = ({
     product
 }: PropTypes) => {
   return (
-    <Card>
-  <CardHeader className="flex items-center justify-center">
-    <Image src={product.image} alt="pizza-image" height={150} width={150} className="h-24 w-24 sm:h-[150px] sm:w-[150px]" />
-  </CardHeader>
-  <CardContent>
-    <h2 className="text-xl font-bold">
-        {product.name}
-    </h2>
-    <p className="mt-2">
-        {product.description}
-    </p>
-  </CardContent>
+    <Card className="h-full flex flex-col">
+      <CardHeader className="flex items-center justify-center">
+        <div className="relative h-24 w-24 sm:h-[150px] sm:w-[150px] rounded-xl overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-contain"
+            sizes="(max-width: 640px) 96px, 150px"
+          />
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1">
+        <h2 className="text-xl font-bold">
+            {product.name}
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+            {product.description}
+        </p>
+      </CardContent>
   <CardFooter className="flex items-center justify-between">
     <p>
         <span>
@@ -53,14 +61,16 @@ const ProductCard = ({
   >Choose</DialogTrigger>
   <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-3xl p-0">
     <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-1/3 bg-white rounded p-4 md:p-8 flex items-center justify-center">
-        <Image
-        src={'/pizza-main.png'}
-        alt={product.name}
-        height={300}
-        width={300}
-        className="object-contain h-28 w-28 sm:h-[180px] sm:w-[180px] md:h-[300px] md:w-[300px]"
-        />
+      <div className="w-full md:w-1/3 bg-white rounded-t-lg md:rounded-l-lg md:rounded-t-none p-4 md:p-8 flex items-center justify-center">
+        <div className="relative h-28 w-28 sm:h-[180px] sm:w-[180px] md:h-[250px] md:w-[250px] rounded-xl overflow-hidden">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-contain"
+            sizes="(max-width: 768px) 112px, (max-width: 1024px) 180px, 250px"
+          />
+        </div>
       </div>
       <div className="w-full md:w-2/3 p-4 md:p-8 bg-muted">
          <h3 className="text-xl font-bold">{product.name}</h3>

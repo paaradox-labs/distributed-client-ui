@@ -1,31 +1,9 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import ProductCard from "./components/product-card";
-import { Category, Product } from "@/lib/types";
+import ProductList from "./components/product-list";
+import { Suspense } from "react";
 
 export default async function Home() {
-  // todo: do concurrent reqs -> Promise.all()
-  const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
-    next:{
-      revalidate: 3600
-    }
-  })
-
-  if(!categoryResponse.ok){
-    throw new Error("Failed to fetch categories")
-  }
-
-  const categories: Category[] = await categoryResponse.json()
-
-  // todo: Add pagination & Add dynamic tenandID
-  const productsResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?limit=100&tenantId=4`, {
-    next:{
-      revalidate: 3600
-    }
-  })
-
-  const products: {data: Product[]} = await productsResponse.json()
   
   return (
     <>
@@ -62,35 +40,10 @@ export default async function Home() {
           </div>
         </div>
       </section>  
-
-    <section>
-      <div  className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
-          <Tabs defaultValue={categories[0]._id}>
-    <TabsList>
-      {
-        categories.map((category) => {
-          return (
-                  <TabsTrigger value={category._id} key={category._id} className="text-md">{category.name}</TabsTrigger>
-          )
-        })
-      }
-    </TabsList>
-    {
-      categories.map((category) => {
-        return (
-          <TabsContent key={category._id} value={category._id}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        {products.data.filter(product => product.category._id ===   category._id).map((product) => (
-        <ProductCard product={product} key={product._id} />
-      ))}
-    </div>
-    </TabsContent>
-        )
-      })
-    }
-</Tabs>
-      </div>
-    </section>
+      {/* todo: Add Skeleton Component */}
+      <Suspense fallback={`Loading...`}>
+      <ProductList /> 
+      </Suspense>
     </>
   );
 }
