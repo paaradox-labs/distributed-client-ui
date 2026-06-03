@@ -16,16 +16,8 @@ import Image from "next/image"
 import ToppingList from "./topping-list"
 import { Button } from "@/components/ui/button"
 import { ShoppingCart } from "lucide-react"
+import { Product } from "@/lib/types"
 
-
-
-export type Product = {
-    id: string
-    name: string
-    description: string
-    image: string
-    price: number
-}
 
 type PropTypes = { product: Product }
 
@@ -51,7 +43,7 @@ const ProductCard = ({
             From {" "}
         </span>
         <span className="font-bold">
-            ₹{" "}{product.price}
+            ₹{" "}{100}
         </span>
     </p>
     <Dialog>
@@ -164,7 +156,7 @@ const ProductCard = ({
 
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
-                ₹ {product.price}
+                ₹ {100}
             </span>
             <Button className="w-full sm:w-auto">
                 <ShoppingCart size={`20`} />
