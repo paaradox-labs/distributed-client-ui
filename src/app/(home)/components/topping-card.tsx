@@ -4,13 +4,7 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { CircleCheck } from 'lucide-react';
 
-export type Topping = {
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    isAvailable: boolean;
-};
+
 type PropType = {
     topping: Topping;
     selectedToppings: Topping[];
