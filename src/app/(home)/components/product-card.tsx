@@ -7,6 +7,7 @@ import {
 import Image from "next/image"
 import { Product } from "@/lib/types"
 import ProductModal from "./product-modal"
+import { Suspense } from "react"
 
 
 type PropTypes = { product: Product }
@@ -44,7 +45,10 @@ const ProductCard = ({
             ₹{" "}{100}
         </span>
     </p>
+
+    <Suspense fallback={`Loading...`}>
     <ProductModal product={product} />
+    </Suspense>
   </CardFooter>
 </Card>
   )
