@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { DialogTitle, DialogTrigger, DialogContent, Dialog } from "@/components/ui/dialog"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -13,6 +15,12 @@ type PropTypes = { product: Product }
 const ProductModal = ({
     product
 }: PropTypes) => {
+
+    const handleAddToCart = () => {
+        // todo: add to cart logic
+        console.log("adding to the cart...");
+    }
+
   return (
         <Dialog>
         <DialogTitle className="sr-only"/>
@@ -74,7 +82,7 @@ const ProductModal = ({
             <span className="font-bold text-lg">
                 ₹ {100}
             </span>
-            <Button className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto" onClick={handleAddToCart}>
                 <ShoppingCart size={`20`} />
                 <span className="ml-2">
                     Add to cart
