@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState } from 'react';
 import ToppingCard from './topping-card';
 import { Topping } from '@/lib/types';
 
@@ -23,12 +23,14 @@ const ToppingList = () => {
     const handleCheckBoxCheck = (topping: Topping) => {
         const isAlreadyExists = selectedToppings.some((element) => element.id === topping.id);
 
+        startTransition(() => {
         if (isAlreadyExists) {
             setSelectedToppings((prev) => prev.filter((elm) => elm.id !== topping.id));
             return;
         }
 
         setSelectedToppings((prev) => [...prev, topping]);
+        })
     };
 
     return (

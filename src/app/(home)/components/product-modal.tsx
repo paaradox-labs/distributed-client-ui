@@ -8,6 +8,7 @@ import ToppingList from "./topping-list"
 import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Product } from "@/lib/types"
+import { Suspense } from "react"
 
 type PropTypes = { product: Product }
 
@@ -76,8 +77,9 @@ const ProductModal = ({
                                 </div>
         )
     })}
+        <Suspense fallback={`Toppings Loading...`}>
         <ToppingList />
-
+        </Suspense>
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
                 ₹ {100}
@@ -89,7 +91,6 @@ const ProductModal = ({
                 </span>
             </Button>
         </div>
-
         </div>
         </div>  
   </DialogContent>
