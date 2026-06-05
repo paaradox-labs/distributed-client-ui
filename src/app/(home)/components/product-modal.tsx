@@ -7,8 +7,12 @@ import { ShoppingCart } from "lucide-react"
 import ToppingList from "./topping-list"
 import Image from "next/image"
 import { Label } from "@/components/ui/label"
-import { Product } from "@/lib/types"
-import { Suspense } from "react"
+import { Product, Topping } from "@/lib/types"
+import { startTransition, Suspense, useState } from "react"
+
+type ChosenConfig = {
+     [key: string]: string
+}
 
 type PropTypes = { product: Product }
 
@@ -17,9 +21,38 @@ const ProductModal = ({
     product
 }: PropTypes) => {
 
+    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>()
+
+    const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+    const handleCheckBoxCheck = (topping: Topping) => {
+        const isAlreadyExists = selectedToppings.some((element) => element.id === topping.id);
+
+        startTransition(() => {
+        if (isAlreadyExists) {
+            setSelectedToppings((prev) => prev.filter((elm) => elm.id !== topping.id));
+            return;
+        }
+
+        setSelectedToppings((prev) => [...prev, topping]);
+        })
+    };
+
     const handleAddToCart = () => {
         // todo: add to cart logic
         console.log("adding to the cart...");
+    }
+
+        const handleRadioChange = (key: string, data: string) => {
+        
+        startTransition(() => {
+            setChosenConfig((prev) => {
+            return{
+                ...prev,
+                [key]: data
+            }
+        })
+    })
     }
 
   return (
@@ -52,6 +85,9 @@ const ProductModal = ({
           Choose the {`${key}`}
         </h4>
       <RadioGroup
+                                        onValueChange={(data) => {
+                                            handleRadioChange(key, data)
+                                        }}
                                         defaultValue={value.availableOptions[0]}
                                         className="grid grid-cols-3 gap-2 md:gap-4 mt-2">
                                         {
@@ -78,7 +114,7 @@ const ProductModal = ({
         )
     })}
         <Suspense fallback={`Toppings Loading...`}>
-        <ToppingList />
+        <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
         </Suspense>
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
