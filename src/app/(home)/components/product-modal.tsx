@@ -9,6 +9,8 @@ import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Product, Topping } from "@/lib/types"
 import { startTransition, Suspense, useState } from "react"
+import { useAppDispatch } from "@/lib/store/hooks"
+import { addToCart } from "@/lib/store/features/cart/cartSlice"
 
 type ChosenConfig = {
      [key: string]: string
@@ -20,6 +22,8 @@ type PropTypes = { product: Product }
 const ProductModal = ({
     product
 }: PropTypes) => {
+
+    const dispatch = useAppDispatch()
 
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>()
 
@@ -33,15 +37,23 @@ const ProductModal = ({
             setSelectedToppings((prev) => prev.filter((elm) => elm.id !== topping.id));
             return;
         }
-
         setSelectedToppings((prev) => [...prev, topping]);
         })
     };
 
-    const handleAddToCart = () => {
+    const handleAddToCart = (product: Product) => {
         // todo: add to cart logic
         console.log("adding to the cart...");
+        const itemToAdd = {
+            product,
+            chosenConfiguration:{
+                priceConfiguration: chosenConfig!,
+                selectedToppings: selectedToppings
+            }
+        };
+        dispatch(addToCart(itemToAdd))
     }
+    
 
         const handleRadioChange = (key: string, data: string) => {
         
@@ -120,7 +132,7 @@ const ProductModal = ({
             <span className="font-bold text-lg">
                 ₹ {100}
             </span>
-            <Button className="w-full sm:w-auto" onClick={handleAddToCart}>
+            <Button className="w-full sm:w-auto" onClick={() => handleAddToCart(product)}>
                 <ShoppingCart size={`20`} />
                 <span className="ml-2">
                     Add to cart
