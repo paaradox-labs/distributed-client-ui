@@ -7,7 +7,7 @@ import { ShoppingCart } from "lucide-react"
 import ToppingList from "./topping-list"
 import Image from "next/image"
 import { Label } from "@/components/ui/label"
-import { Product } from "@/lib/types"
+import { Product, Topping } from "@/lib/types"
 import { startTransition, Suspense, useState } from "react"
 
 type ChosenConfig = {
@@ -22,6 +22,21 @@ const ProductModal = ({
 }: PropTypes) => {
 
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>()
+
+    const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+    const handleCheckBoxCheck = (topping: Topping) => {
+        const isAlreadyExists = selectedToppings.some((element) => element.id === topping.id);
+
+        startTransition(() => {
+        if (isAlreadyExists) {
+            setSelectedToppings((prev) => prev.filter((elm) => elm.id !== topping.id));
+            return;
+        }
+
+        setSelectedToppings((prev) => [...prev, topping]);
+        })
+    };
 
     const handleAddToCart = () => {
         // todo: add to cart logic
@@ -99,7 +114,7 @@ const ProductModal = ({
         )
     })}
         <Suspense fallback={`Toppings Loading...`}>
-        <ToppingList />
+        <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
         </Suspense>
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
