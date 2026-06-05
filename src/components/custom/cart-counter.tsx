@@ -7,12 +7,8 @@ import Link from "next/link"
 
 const CartCounter = () => {
 
-  const dispatch = useAppDispatch()
-  const value = useAppSelector((state) => state.cart.value)
+  const cartItems = useAppSelector((state) => state.cart.cartItems)
   
-  const handleIncrement = () => {
-      dispatch(increment());  
-  }
 
   return (
     <>
@@ -21,14 +17,9 @@ const CartCounter = () => {
               <ShoppingBasket className="hover:text-primary transition-colors h-6 w-6" />
             </Link>
             <span className="absolute -top-3 -right-3 h-5 w-5 flex items-center justify-center rounded-full bg-primary font-bold text-white text-xs">
-              {/* {value} */}
+              {cartItems.length}
             </span>
           </div>
-          <button
-          onClick={handleIncrement}
-          >
-            Increment
-          </button>
     </>
   )
 }
