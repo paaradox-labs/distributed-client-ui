@@ -143,9 +143,17 @@ const ProductModal = ({
                                 </div>
         )
     })}
-        <Suspense fallback={`Toppings Loading...`}>
+
+    {/* Todo: make this condition dynamic (add  hasToppings field in category service (backend work)) */}
+    {/* This is a temp solution and not scalabale */}
+    {
+        product.category.name === "Pizza" && (
+            <Suspense fallback={`Toppings Loading...`}>
         <ToppingList selectedToppings={selectedToppings} handleCheckBoxCheck={handleCheckBoxCheck} />
         </Suspense>
+        )
+    }
+
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
                 ₹{totalPrice}
