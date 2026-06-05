@@ -1,10 +1,10 @@
 import Link from "next/link"
 import { SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem, Select } from "../ui/select"
-import { Phone, ShoppingBasket } from "lucide-react"
+import { Phone } from "lucide-react"
 import { Button } from "../ui/button"
 import MobileMenu from "./mobile-menu"
 import { Tenant } from "@/lib/types"
-import CartCounter from "./cart-counter"
+import CartCounter from "./cart-counter-wrapper"
 
 const Header = async () => {
   const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
