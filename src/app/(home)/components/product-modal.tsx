@@ -8,7 +8,11 @@ import ToppingList from "./topping-list"
 import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Product } from "@/lib/types"
-import { Suspense } from "react"
+import { startTransition, Suspense, useState } from "react"
+
+type ChosenConfig = {
+     [key: string]: string
+}
 
 type PropTypes = { product: Product }
 
@@ -17,9 +21,23 @@ const ProductModal = ({
     product
 }: PropTypes) => {
 
+    const [chosenConfig, setChosenConfig] = useState<ChosenConfig>()
+
     const handleAddToCart = () => {
         // todo: add to cart logic
         console.log("adding to the cart...");
+    }
+
+        const handleRadioChange = (key: string, data: string) => {
+        
+        startTransition(() => {
+            setChosenConfig((prev) => {
+            return{
+                ...prev,
+                [key]: data
+            }
+        })
+    })
     }
 
   return (
@@ -52,6 +70,9 @@ const ProductModal = ({
           Choose the {`${key}`}
         </h4>
       <RadioGroup
+                                        onValueChange={(data) => {
+                                            handleRadioChange(key, data)
+                                        }}
                                         defaultValue={value.availableOptions[0]}
                                         className="grid grid-cols-3 gap-2 md:gap-4 mt-2">
                                         {
