@@ -8,7 +8,7 @@ import ToppingList from "./topping-list"
 import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Product, Topping } from "@/lib/types"
-import { startTransition, Suspense, useState } from "react"
+import { startTransition, Suspense, useMemo, useState } from "react"
 import { useAppDispatch } from "@/lib/store/hooks"
 import { addToCart } from "@/lib/store/features/cart/cartSlice"
 
@@ -36,6 +36,16 @@ const ProductModal = ({
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(defaultConfiguration as unknown as ChosenConfig)
 
     const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
+
+        const totalPrice = useMemo(() => {
+        const toppingsTotal = selectedToppings.reduce((acc,curr) => acc + curr.price, 0)
+
+        const configPricing = Object.entries(chosenConfig).reduce((acc, [key,value]:[string,string]) => {
+            const price = product.priceConfiguration[key].availableOptions[value]
+            return acc + price
+        },0)
+        return toppingsTotal + configPricing
+    },[chosenConfig, product, selectedToppings])
 
     const handleCheckBoxCheck = (topping: Topping) => {
         const isAlreadyExists = selectedToppings.some((element) => element.id === topping.id);
@@ -138,7 +148,7 @@ const ProductModal = ({
         </Suspense>
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
-                ₹ {100}
+                ₹{totalPrice}
             </span>
             <Button className="w-full sm:w-auto" onClick={() => handleAddToCart(product)}>
                 <ShoppingCart size={`20`} />
