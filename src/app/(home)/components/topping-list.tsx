@@ -13,7 +13,6 @@ const ToppingList = ({selectedToppings, handleCheckBoxCheck}:{selectedToppings: 
         const toppingResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=4`)
         const toppings = await toppingResponse.json()
         setToppings(toppings)
-        console.log("toppings: ", toppings);
         }
         fetchData()
     },[])

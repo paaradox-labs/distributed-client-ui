@@ -3,19 +3,18 @@
 
 import { Tenant } from '@/lib/types';
 import { SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem, Select } from '../ui/select'
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
-
     const router = useRouter();
+    const searchParams = useSearchParams()
 
     const handleValueChange = (value:string) => {
-        console.log(value);
         router.push(`/?restaurantId=${value}`)
     }
 
   return (
-         <Select onValueChange={handleValueChange}>
+         <Select onValueChange={handleValueChange} defaultValue={searchParams.get("restaurantId") || ""}>
             <SelectTrigger className="w-[140px] sm:w-[180px] focus-visible:ring-0 focus:ring-0 focus-visible:border-input text-xs sm:text-sm h-9 sm:h-10">
               <SelectValue placeholder="Select Restaurant" />
             </SelectTrigger>
@@ -23,7 +22,7 @@ const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
               <SelectGroup>
                 {
                   restaurants.data.map((restaurant) => {
-                    return <SelectItem key={restaurant.id} value={restaurant.id}>{restaurant.name}</SelectItem>
+                    return <SelectItem key={restaurant.id} value={String(restaurant.id)}>{restaurant.name}</SelectItem>
                   })
                 }
               </SelectGroup>
