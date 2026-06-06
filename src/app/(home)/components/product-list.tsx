@@ -2,7 +2,7 @@ import { TabsList, TabsTrigger, TabsContent, Tabs } from '@/components/ui/tabs'
 import ProductCard from './product-card'
 import { Category, Product } from '@/lib/types'
 
-const ProductList =async () => {
+const ProductList = async( {restaurantId}: {restaurantId: string } ) => {
 
       const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
         next:{
@@ -16,7 +16,7 @@ const ProductList =async () => {
     
       const categories: Category[] = await categoryResponse.json()
 
-      const productsResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?limit=100&tenantId=4`, {
+      const productsResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?limit=100&tenantId=${restaurantId}`, {
     next:{
       revalidate: 3600
     }
