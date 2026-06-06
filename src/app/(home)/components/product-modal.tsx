@@ -9,8 +9,9 @@ import Image from "next/image"
 import { Label } from "@/components/ui/label"
 import { Product, Topping } from "@/lib/types"
 import { startTransition, Suspense, useMemo, useState } from "react"
-import { useAppDispatch } from "@/lib/store/hooks"
-import { addToCart } from "@/lib/store/features/cart/cartSlice"
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks"
+import { addToCart, CartItem } from "@/lib/store/features/cart/cartSlice"
+import { cn, hashTheItem } from "@/lib/utils"
 
 type ChosenConfig = {
      [key: string]: string
@@ -23,6 +24,7 @@ const ProductModal = ({
     product
 }: PropTypes) => {
 
+    const cartItems = useAppSelector((state) => state.cart.cartItems)
     const dispatch = useAppDispatch()
 
     const defaultConfiguration = Object.entries(product.category.priceConfiguration).map(([key,value]) => {
@@ -47,6 +49,22 @@ const ProductModal = ({
         return toppingsTotal + configPricing
     },[chosenConfig, product, selectedToppings])
 
+    const alreadyHasInCart = useMemo(() => {
+        const currentConfiguration = {
+            _id: product._id,
+            name: product.name,
+            image: product.image,
+            priceConfiguration: product.priceConfiguration,
+            chosenConfiguration: {
+                priceConfiguration: {...chosenConfig},
+                selectedToppings: selectedToppings
+            },
+            qty: 1,
+        }
+        const hash = hashTheItem(currentConfiguration) 
+        return cartItems.some((item) => item.hash === hash)
+    },[product, chosenConfig, selectedToppings, cartItems])
+
     const handleCheckBoxCheck = (topping: Topping) => {
         const isAlreadyExists = selectedToppings.some((element) => element.id === topping.id);
 
@@ -62,12 +80,16 @@ const ProductModal = ({
     const handleAddToCart = (product: Product) => {
         // todo: add to cart logic
         console.log("adding to the cart...");
-        const itemToAdd = {
-            product,
+        const itemToAdd: CartItem = {
+            _id: product._id,
+            name: product.name,
+            image: product.image,
+            priceConfiguration: product.priceConfiguration,
             chosenConfiguration:{
                 priceConfiguration: chosenConfig!,
                 selectedToppings: selectedToppings
-            }
+            },
+            qty: 1,
         };
         dispatch(addToCart(itemToAdd))
     }
@@ -153,15 +175,14 @@ const ProductModal = ({
         </Suspense>
         )
     }
-
         <div className="mt-6 md:mt-12 flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="font-bold text-lg">
-                ₹{totalPrice}
+                {totalPrice}
             </span>
-            <Button className="w-full sm:w-auto" onClick={() => handleAddToCart(product)}>
+            <Button disabled={alreadyHasInCart} className={cn("w-full sm:w-auto", alreadyHasInCart ? "bg-green-600 disabled:opacity-90" : "bg-primary")} onClick={() => handleAddToCart(product)}>
                 <ShoppingCart size={`20`} />
                 <span className="ml-2">
-                    Add to cart
+                    {alreadyHasInCart ? "Already in cart": "Add to cart"}
                 </span>
             </Button>
         </div>
