@@ -79,8 +79,6 @@ const ProductModal = ({
     };
 
     const handleAddToCart = (product: Product) => {
-        // todo: add to cart logic
-        console.log("adding to the cart...");
         const itemToAdd: CartItem = {
             _id: product._id,
             name: product.name,
