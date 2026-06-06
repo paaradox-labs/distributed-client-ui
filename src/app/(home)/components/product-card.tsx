@@ -8,6 +8,7 @@ import Image from "next/image"
 import { Product } from "@/lib/types"
 import ProductModal from "./product-modal"
 import { Suspense } from "react"
+import { getFromPrice } from "@/lib/utils"
 
 
 type PropTypes = { product: Product }
@@ -42,7 +43,7 @@ const ProductCard = ({
             From {" "}
         </span>
         <span className="font-bold">
-            ₹{" "}{100}
+            ₹{" "}{getFromPrice(product)}
         </span>
     </p>
 
