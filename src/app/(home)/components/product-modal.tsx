@@ -24,6 +24,7 @@ const ProductModal = ({
     product
 }: PropTypes) => {
 
+    const [dialogOpen, setDialogOpen] = useState(false)
     const cartItems = useAppSelector((state) => state.cart.cartItems)
     const dispatch = useAppDispatch()
 
@@ -36,7 +37,6 @@ const ProductModal = ({
         ...curr
     }),{})
     const [chosenConfig, setChosenConfig] = useState<ChosenConfig>(defaultConfiguration as unknown as ChosenConfig)
-
     const [selectedToppings, setSelectedToppings] = useState<Topping[]>([]);
 
         const totalPrice = useMemo(() => {
@@ -91,7 +91,8 @@ const ProductModal = ({
             },
             qty: 1,
         };
-        dispatch(addToCart(itemToAdd))
+        dispatch(addToCart(itemToAdd));
+        setDialogOpen(false)
     }
     
 
@@ -108,7 +109,7 @@ const ProductModal = ({
     }
 
   return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTitle className="sr-only"/>
   <DialogTrigger
   className="bg-orange-500 hover:bg-orange-500/90 text-white px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
