@@ -92,7 +92,8 @@ const ProductModal = ({
             qty: 1,
         };
         dispatch(addToCart(itemToAdd));
-        setDialogOpen(false)
+        setSelectedToppings([]);
+        setDialogOpen(false);
     }
     
 
