@@ -1,13 +1,14 @@
 import Link from "next/link"
-import { SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem, Select } from "../ui/select"
 import { Phone } from "lucide-react"
 import { Button } from "../ui/button"
 import MobileMenu from "./mobile-menu"
-import { Tenant } from "@/lib/types"
 import CartCounter from "./cart-counter-wrapper"
+import TenantSelector from "./tenant-select"
+import { Tenant } from "@/lib/types"
 
 const Header = async () => {
-  const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
+
+      const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
     next: {
       revalidate: 3600 
     }
@@ -39,20 +40,7 @@ const Header = async () => {
     />
 </svg>
           </Link>
-          <Select>
-            <SelectTrigger className="w-[140px] sm:w-[180px] focus-visible:ring-0 focus:ring-0 focus-visible:border-input text-xs sm:text-sm h-9 sm:h-10">
-              <SelectValue placeholder="Select Restaurant" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {
-                  restaurants.data.map((restaurant) => {
-                    return <SelectItem key={restaurant.id} value={restaurant.id}>{restaurant.name}</SelectItem>
-                  })
-                }
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <TenantSelector restaurants={restaurants} />
         </div>
 
         {/* Desktop & Tablet Navigation (md:flex) */}

@@ -3,8 +3,9 @@ import Image from "next/image";
 import ProductList from "./components/product-list";
 import { Suspense } from "react";
 
-export default async function Home() {
-  
+export default async function Home({searchParams}: {searchParams: Promise<{restaurantId: string}>}) {
+
+  const { restaurantId } = await searchParams
   return (
     <>
       <section className="bg-white overflow-hidden">
@@ -42,7 +43,7 @@ export default async function Home() {
       </section>  
       {/* todo: Add Skeleton Component */}
       <Suspense fallback={`Loading...`}>
-      <ProductList /> 
+      <ProductList restaurantId={restaurantId}/> 
       </Suspense>
     </>
   );
