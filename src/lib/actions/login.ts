@@ -25,7 +25,7 @@ export default async function login(prevState: {type: string, message: unknown} 
             console.log('error', error);
             return {
                 type: 'error',
-                message: error.errors[0].message,
+                message: error.errors[0].msg,
             };
         }
 
