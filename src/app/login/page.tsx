@@ -5,14 +5,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 import { LoaderCircle } from 'lucide-react';
 import login from '@/lib/actions/login';
+import { useRouter } from 'next/navigation';
 
 const SubmitButton = () => {
     const { pending } = useFormStatus();
-
     return (
         <Button>
             {pending ? (
@@ -33,13 +33,22 @@ const Login = () => {
     const initialState: LoginState = null;
     
     const [state, formAction] = useActionState(login, initialState);
+    
+    const router = useRouter()
+    useEffect(() => {
+        if(state?.type === "success") {
+        router.push("/")
+    }
+    },[router, state])
 
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
             <div className="flex items-center justify-center py-12">
                 <div className="mx-auto grid w-[350px] gap-6">
                     <div className="grid gap-2 text-center">
-                        {/* <p aria-live="polite"></p> */}
+                        <p aria-live="polite" className={`${state?.type === "error" ? "text-red-500" : "text-green-500"}`}>
+                            {state?.message}
+                        </p>
                         <h1 className="text-3xl font-bold">Login</h1>
                         <p className="text-balance text-muted-foreground">
                             Enter your email below to login to your account
