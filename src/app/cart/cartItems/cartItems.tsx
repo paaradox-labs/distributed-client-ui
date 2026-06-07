@@ -1,5 +1,5 @@
 'use client';
-import  { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import CartItem from './cartItem';
 import Link from 'next/link';
 import { useAppSelector } from '@/lib/store/hooks';
@@ -54,8 +54,9 @@ const CartItems = () => {
             <div className="flex justify-between items-center">
                 <span className="font-bold text-xl">&#8377;{finalTotal}</span>
                 <Button
-                onClick={() => router.push("/checkout")}
-                >
+                 onClick={() =>
+                        router.push(`/checkout/?restaurantId=${searchParams.get('restaurantId')}`)
+                    }>
                     Checkout
                     <ArrowRight size={16} className="ml-2" />
                 </Button>
