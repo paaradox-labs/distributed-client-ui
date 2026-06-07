@@ -6,6 +6,7 @@ import CartCounter from "./cart-counter-wrapper"
 import TenantSelector from "./tenant-select"
 import { Tenant } from "@/lib/types"
 import { getSession } from "@/lib/session"
+import Logout from "./logout"
 
 const Header = async () => {
 
@@ -62,10 +63,19 @@ const Header = async () => {
             <Phone className="h-4 w-4 text-primary" />
             <span>+91 9800 098 998</span>
           </div>
-
-          <Button className="h-9 sm:h-10 px-4 sm:px-6 rounded-full font-semibold">
-            {session ? "Logout" : "Login"}
+          {
+            session ? (
+              <Logout />
+            ) : (
+              <Button asChild className="h-9 sm:h-10 px-4 sm:px-6 rounded-full font-semibold">
+            <Link
+            href={`/login`}
+            >
+              Login
+            </Link>
           </Button>
+            )
+          }
         </div>
 
         <MobileMenu />
