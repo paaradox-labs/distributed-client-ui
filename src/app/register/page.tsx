@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { LoaderCircle } from 'lucide-react';
 import register from '@/lib/actions/register';
 import { useRouter } from 'next/navigation';
@@ -27,18 +28,18 @@ const SubmitButton = () => {
     );
 };
 
-const initialState = {
-    type: '',
-    message: '',
-};
-
 export default function SignUpPage() {
-    const router = useRouter()
-    const [state, formAction] = useFormState(register, initialState);
+    type RegisterState = { type: string; message: unknown } | null;
+    const initialState: RegisterState = null;
 
-    if (state.type === 'success') {
-        router.push("/")
-    }
+    const [state, formAction] = useActionState(register, initialState);
+
+    const router = useRouter();
+    useEffect(() => {
+        if (state?.type === 'success') {
+            router.push('/');
+        }
+    }, [router, state]);
 
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
@@ -48,9 +49,9 @@ export default function SignUpPage() {
                         <p
                             aria-live="polite"
                             className={`${
-                                state.type === 'error' ? 'text-red-500' : 'text-green-500'
+                                state?.type === 'error' ? 'text-red-500' : 'text-green-500'
                             }`}>
-                            {state.message}
+                            {state?.message as string}
                         </p>
                         <h1 className="text-3xl font-bold">Signup</h1>
                         <p className="text-balance text-muted-foreground">
@@ -106,7 +107,7 @@ export default function SignUpPage() {
             </div>
             <div className="hidden bg-muted lg:block">
                 <Image
-                    src="/login-image.webp"
+                    src="/image.png"
                     width={1920}
                     height={1080}
                     style={{ objectFit: 'cover' }}
