@@ -5,9 +5,11 @@ import MobileMenu from "./mobile-menu"
 import CartCounter from "./cart-counter-wrapper"
 import TenantSelector from "./tenant-select"
 import { Tenant } from "@/lib/types"
+import { getSession } from "@/lib/session"
 
 const Header = async () => {
 
+    const session = await getSession()
       const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
     next: {
       revalidate: 3600 
@@ -62,7 +64,7 @@ const Header = async () => {
           </div>
 
           <Button className="h-9 sm:h-10 px-4 sm:px-6 rounded-full font-semibold">
-            Logout
+            {session ? "Logout" : "Login"}
           </Button>
         </div>
 
