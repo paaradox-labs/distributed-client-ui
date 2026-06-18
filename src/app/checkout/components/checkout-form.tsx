@@ -18,10 +18,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Coins, CreditCard, LoaderCircle, Plus } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getCustomer } from '@/lib/http/api';
+import { Customer } from '@/lib/types';
 
 export default function CheckoutForm() {
 
-    const {data:customer, isLoading} = useQuery({
+    const {data:customer, isLoading} = useQuery<Customer>({
         queryKey: ["customer"],
         queryFn: async() => {
             return await getCustomer().then(res => res.data)
@@ -89,16 +90,24 @@ export default function CheckoutForm() {
                                 <RadioGroup
                                     defaultValue="option-one"
                                     className="grid grid-cols-2 gap-6 mt-2">
-                                    <Card className="p-6">
+                                        {
+                                            customer?.addresses.map((address) => {
+                                                return(
+                                                     <Card className="p-6" key={address.text}>
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="option-one" id="option-one" />
                                             <Label htmlFor="option-one" className="leading-normal">
-                                                123, ABC Street, Malad West, Mumbai, Maharashtra,
-                                                India 400064
+                                               {
+                                                address.text
+                                               }
                                             </Label>
                                         </div>
                                     </Card>
-                                    <Card className="p-6">
+                                                )
+                                            }) 
+                                        }
+                                   
+                                    {/* <Card className="p-6">
                                         <div className="flex items-center space-x-2">
                                             <RadioGroupItem value="option-two" id="option-two" />
                                             <Label htmlFor="option-two" className="leading-normal">
@@ -106,7 +115,7 @@ export default function CheckoutForm() {
                                                 Mumbai, Maharashtra, India 400069
                                             </Label>
                                         </div>
-                                    </Card>
+                                    </Card> */}
                                 </RadioGroup>
                             </div>
                         </div>
