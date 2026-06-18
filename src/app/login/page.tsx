@@ -9,7 +9,7 @@ import { useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 import { LoaderCircle } from 'lucide-react';
 import login from '@/lib/actions/login';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const SubmitButton = () => {
     const { pending } = useFormStatus();
@@ -29,17 +29,23 @@ const SubmitButton = () => {
 
 const Login = () => {
 
+
+
     type LoginState = { type: string; message: unknown } | null;
     const initialState: LoginState = null;
-    
+
     const [state, formAction] = useActionState(login, initialState);
-    
+
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const returnTo = searchParams.get('returnTo') || '/'
+    const restaurantId = searchParams.get('restaurantId')
+
     useEffect(() => {
         if(state?.type === "success") {
-        router.push("/")
+        router.push(returnTo)
     }
-    },[router, state])
+    },[router, state, returnTo])
 
     return (
         <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
@@ -50,11 +56,16 @@ const Login = () => {
                             {state?.message}
                         </p>
                         <h1 className="text-3xl font-bold">Login</h1>
+                        {restaurantId && (
+                            <p className="text-sm text-muted-foreground">
+                                Restaurant ID: {restaurantId}
+                            </p>
+                        )}
                         <p className="text-balance text-muted-foreground">
                             Enter your email below to login to your account
                         </p>
                     </div>
-                    <form 
+                    <form
                     action={formAction}
                     >
                         <div className="grid gap-4">

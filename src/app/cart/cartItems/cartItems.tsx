@@ -4,13 +4,12 @@ import CartItem from './cartItem';
 import Link from 'next/link';
 import { useAppSelector } from '@/lib/store/hooks';
 import { ArrowRight, ShoppingCart } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { getItemTotal } from '@/lib/utils';
 
-const CartItems = () => {
+const CartItems = ({ restaurantId }: { restaurantId?: string }) => {
     const router = useRouter()
-    const searchParams = useSearchParams();
 
     const [isClient, setIsClient] = useState(false);
     useEffect(() => {
@@ -38,7 +37,7 @@ const CartItems = () => {
                     Your cart is empty!{' '}
                     <Link
                         className="text-orange-500"
-                        href={`/?restaurantId=${searchParams.get('restaurantId')}`}>
+                        href={restaurantId ? `/?restaurantId=${restaurantId}` : '/'}>
                         Continue shopping.
                     </Link>
                 </p>
@@ -55,8 +54,8 @@ const CartItems = () => {
                 <span className="font-bold text-xl">&#8377;{finalTotal}</span>
                 <Button
                  onClick={() => {
-                        const restaurantId = searchParams.get('restaurantId') || localStorage.getItem('restaurantId')
-                        router.push(restaurantId ? `/checkout/?restaurantId=${restaurantId}` : '/checkout')
+                        const id = restaurantId || localStorage.getItem('restaurantId')
+                        router.push(id ? `/checkout/?restaurantId=${id}` : '/checkout')
                     }}>
                     Checkout
                     <ArrowRight size={16} className="ml-2" />

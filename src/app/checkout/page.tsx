@@ -12,12 +12,15 @@ export default async function Checkout({ searchParams }: { searchParams: Promise
 
     const restaurantId = resolved.restaurantId || (await cookies()).get('restaurantId')?.value
 
-    const params = new URLSearchParams()
-    if (restaurantId) params.set('restaurantId', restaurantId)
-    const queryString = params.toString()
-
     if(!session){
-        redirect(queryString ? `/login?${queryString}` : '/login')
+        const returnToQuery = restaurantId ? `?restaurantId=${restaurantId}` : ''
+        const returnTo = `/checkout${returnToQuery}`
+
+        const loginParams = new URLSearchParams()
+        if (restaurantId) loginParams.set('restaurantId', restaurantId)
+        loginParams.set('returnTo', returnTo)
+
+        redirect(`/login?${loginParams.toString()}`)
     }
 
     return <CheckoutForm session={session} />
