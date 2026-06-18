@@ -1,3 +1,16 @@
+export interface User {
+    id: number,
+    firstName: string
+    lastName: string
+    email: string
+    role: "admin" | "customer" | "manager"
+    tenant: number | null
+}
+
+export interface Session {
+    user: User
+}
+
 export interface Tenant {
     id: string
     name: string
