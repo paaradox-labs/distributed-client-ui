@@ -1,6 +1,14 @@
+import { getSession } from '@/lib/session';
+import { redirect } from 'next/navigation';
 import CartItems from "./cartItems/cartItems";
 
-const Cart = () => {
+const Cart = async () => {
+    const session = await getSession()
+
+    if(!session){
+        redirect("/login")
+    }
+
    return (
         <section>
             <div className="container mx-auto py-6">
