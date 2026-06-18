@@ -54,9 +54,10 @@ const CartItems = () => {
             <div className="flex justify-between items-center">
                 <span className="font-bold text-xl">&#8377;{finalTotal}</span>
                 <Button
-                 onClick={() =>
-                        router.push(`/checkout/?restaurantId=${searchParams.get('restaurantId')}`)
-                    }>
+                 onClick={() => {
+                        const restaurantId = searchParams.get('restaurantId') || localStorage.getItem('restaurantId')
+                        router.push(restaurantId ? `/checkout/?restaurantId=${restaurantId}` : '/checkout')
+                    }}>
                     Checkout
                     <ArrowRight size={16} className="ml-2" />
                 </Button>

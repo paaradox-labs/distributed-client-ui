@@ -10,6 +10,8 @@ const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const searchParams = useSearchParams()
 
     const handleValueChange = (value:string) => {
+        localStorage.setItem('restaurantId', value)
+        document.cookie = `restaurantId=${value}; path=/; max-age=${60 * 60 * 24 * 30}`
         router.push(`/?restaurantId=${value}`)
     }
 

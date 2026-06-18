@@ -3,16 +3,22 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Phone, ShoppingBasket, Menu as MenuIcon, X } from "lucide-react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "../ui/button"
 
 const MobileMenu = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const searchParams = useSearchParams()
+
+  const cartHref = searchParams.get('restaurantId')
+    ? `/cart?restaurantId=${searchParams.get('restaurantId')}`
+    : '/cart'
 
   return (
     <>
       <div className="flex md:hidden items-center gap-4">
         <div className="relative">
-          <Link href="/cart">
+          <Link href={cartHref}>
             <ShoppingBasket className="hover:text-primary transition-colors h-6 w-6" />
           </Link>
           <span className="absolute -top-3 -right-3 h-5 w-5 flex items-center justify-center rounded-full bg-primary font-bold text-white text-xs">
