@@ -1,6 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
+import { redirect } from "next/navigation";
 
 export const logout = async() => {
     const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/logout`, {
@@ -18,5 +19,5 @@ export const logout = async() => {
 
     (await cookies()).delete("accessToken");
     (await cookies()).delete("refreshToken")
-    return true
+    redirect("/login")
 }
