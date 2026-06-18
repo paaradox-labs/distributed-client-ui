@@ -15,10 +15,26 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
-import { Coins, CreditCard, Plus } from 'lucide-react';
-import type { Session } from '@/lib/types';
+import { Coins, CreditCard, LoaderCircle, Plus } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { getCustomer } from '@/lib/http/api';
 
-export default function CheckoutForm({ session }: { session: Session }) {
+export default function CheckoutForm() {
+
+    const {data:customer, isLoading} = useQuery({
+        queryKey: ["customer"],
+        queryFn: async() => {
+            return await getCustomer().then(res => res.data)
+        },
+    })
+
+    if(isLoading){
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <LoaderCircle className="h-10 w-10 animate-spin text-primary" />
+            </div>
+        )
+    }
 
     return (
         <div className="flex max-w-7xl mx-auto gap-6 mt-16">
@@ -30,15 +46,15 @@ export default function CheckoutForm({ session }: { session: Session }) {
                     <div className="grid gap-6">
                         <div className="grid gap-3">
                             <Label htmlFor="fname">First Name</Label>
-                            <Input id="fname" type="text" className="w-full" defaultValue="" />
+                            <Input id="fname" type="text" className="w-full" defaultValue={customer?.firstName} disabled />
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="lname">Last Name</Label>
-                            <Input id="lname" type="text" className="w-full" defaultValue="" />
+                            <Input id="lname" type="text" className="w-full" defaultValue={customer?.lastName} disabled/>
                         </div>
                         <div className="grid gap-3">
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="text" className="w-full" defaultValue="" />
+                            <Input id="email" type="text" className="w-full" defaultValue={customer?.email} disabled />
                         </div>
                         <div className="grid gap-3">
                             <div>

@@ -1,15 +1,12 @@
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import CheckoutForm from './checkout-form';
+import CheckoutForm from './components/checkout-form';
 
 export default async function Checkout({ searchParams }: { searchParams: Promise<{ restaurantId?: string }> }) {
 
     const resolved = await searchParams
-    console.log("searchParams resolved:", JSON.stringify(resolved))
-
     const session = await getSession()
-
     const restaurantId = resolved.restaurantId || (await cookies()).get('restaurantId')?.value
 
     if(!session){
@@ -23,6 +20,6 @@ export default async function Checkout({ searchParams }: { searchParams: Promise
         redirect(`/login?${loginParams.toString()}`)
     }
 
-    return <CheckoutForm session={session} />
+    return <CheckoutForm />
 
 }
