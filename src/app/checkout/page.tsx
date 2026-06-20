@@ -1,7 +1,7 @@
 import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
-import CheckoutForm from './components/checkout-form';
+import CustomerForm from './components/customerForm';
 
 export default async function Checkout({ searchParams }: { searchParams: Promise<{ restaurantId?: string }> }) {
 
@@ -20,6 +20,6 @@ export default async function Checkout({ searchParams }: { searchParams: Promise
         redirect(`/login?${loginParams.toString()}`)
     }
 
-    return <CheckoutForm />
+    return <CustomerForm />
 
 }
