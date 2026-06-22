@@ -39,9 +39,13 @@ const OrderSummary = () => {
 
     },[subTotal, discountAmount])
 
-    const grandTotal = useMemo(() => {
+    const grandWithDiscountTotal = useMemo(() => {
         return subTotal - discountAmount + taxesAmount + DELIVERY_CHARGES
     },[subTotal, discountAmount, taxesAmount])
+
+    const grandWithoutDiscountTotal = useMemo(() => {
+        return subTotal + taxesAmount + DELIVERY_CHARGES
+    },[subTotal, taxesAmount])
 
     const {mutate, isPending, isError, error, reset} = useMutation({
         mutationKey: ["couponCode"],
@@ -101,7 +105,14 @@ const OrderSummary = () => {
                     <hr />
                     <div className="flex items-center justify-between">
                         <span className="font-bold">Order total</span>
-                        <span className="font-bold">₹{grandTotal}</span>
+                        <span className="font-bold flex flex-col items-end">
+                           <span className={discountPercentage ? "line-through text-gray-400" : ""}>
+                            ₹{grandWithoutDiscountTotal}
+                           </span>
+                            {
+                                discountPercentage ? <span className='text-green-700'>₹{grandWithDiscountTotal}</span> : null
+                            }
+                        </span>
                     </div>
                     {
                         (discountError || isError) && (
