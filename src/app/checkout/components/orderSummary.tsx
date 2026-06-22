@@ -1,20 +1,27 @@
+ 
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { verifyCoupon } from '@/lib/http/api'
 import { useAppSelector } from '@/lib/store/hooks'
+import { CouponCodeData } from '@/lib/types'
 import { getItemTotal } from '@/lib/utils'
-import { useMemo, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { LoaderCircle } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
+import { useMemo, useRef, useState } from 'react'
 
 // todo: move this to server & calculate this later as per our business needs
 const TAXES_PERCENTAGE = 18
+// todo: move this to server & calculate this later as per our business needs
 const DELIVERY_CHARGES = 20
 
 const OrderSummary = () => {
-
+    const searchParams = useSearchParams()
     const cart = useAppSelector((state) => state.cart.cartItems)
-
     const [discountPercentage, setDiscountPercentage] = useState(0)
-
+    const [discountError, setDiscountError] = useState("")
+    const couponCodeRef = useRef<HTMLInputElement>(null)
     const subTotal = useMemo(() => {
             return cart.reduce((acc, curr) => {
                 return acc + curr.qty * getItemTotal(curr)
@@ -32,9 +39,46 @@ const OrderSummary = () => {
 
     },[subTotal, discountAmount])
 
-    const grandTotal = useMemo(() => {
+    const grandWithDiscountTotal = useMemo(() => {
         return subTotal - discountAmount + taxesAmount + DELIVERY_CHARGES
     },[subTotal, discountAmount, taxesAmount])
+
+    const grandWithoutDiscountTotal = useMemo(() => {
+        return subTotal + taxesAmount + DELIVERY_CHARGES
+    },[subTotal, taxesAmount])
+
+    const {mutate, isPending, isError, error, reset} = useMutation({
+        mutationKey: ["couponCode"],
+        mutationFn: async() => {
+            if(!couponCodeRef.current?.value) return
+            const restaurantId = searchParams.get("restaurantId")
+            if(!restaurantId) return
+            const data: CouponCodeData = {
+                code: couponCodeRef.current?.value,
+                tenantId:  restaurantId
+            }
+            return await verifyCoupon(data).then(res => res.data)
+        },
+        onSuccess: (data) => {
+
+            if(data.valid){
+                setDiscountError("")
+                setDiscountPercentage(data.discount)
+                return
+            }
+            setDiscountError("Coupon is expired")
+            setDiscountPercentage(0)
+
+        },   
+        onError: (error) => {
+            setDiscountError("")
+        }
+    })
+
+    const handleCouponValidation = (e: React.MouseEvent) => {
+        e.preventDefault()
+        mutate()
+    }
 
   return (
     <Card className="w-2/5 border-none h-auto self-start">
@@ -61,16 +105,48 @@ const OrderSummary = () => {
                     <hr />
                     <div className="flex items-center justify-between">
                         <span className="font-bold">Order total</span>
-                        <span className="font-bold">₹{grandTotal}</span>
+                        <span className="font-bold flex flex-col items-end">
+                           <span className={discountPercentage ? "line-through text-gray-400" : ""}>
+                            ₹{grandWithoutDiscountTotal}
+                           </span>
+                            {
+                                discountPercentage ? <span className='text-green-700'>₹{grandWithDiscountTotal}</span> : null
+                            }
+                        </span>
                     </div>
+                    {
+                        (discountError || isError) && (
+                            <div className='text-destructive text-sm'>
+                                {isError ? "This coupon doesn't exists" : discountError}
+                            </div>
+                        )
+                    }
                     <div className="flex items-center gap-4">
                         <Input
-                            id="fname"
+                            id="coupon"
+                            name='code'
                             type="text"
                             className="w-full"
                             placeholder="Coupon code"
+                            ref={couponCodeRef}
+                            onChange={() => {
+                                if(isError){
+                                    reset()
+                                    setDiscountError("")
+                                }
+                            }}
                         />
-                        <Button variant={'outline'}>Apply</Button>
+
+                        <Button onClick={handleCouponValidation} variant={'outline'} disabled={isPending}>
+                            {isPending ? (
+                                <>
+                                    <LoaderCircle className="animate-spin"/>
+                                    Applying
+                                </>
+                            ) : (
+                                "Apply"
+                            )}    
+                        </Button> 
                     </div>
 
                     <div className="text-right mt-6">
