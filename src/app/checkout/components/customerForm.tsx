@@ -7,11 +7,12 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Textarea } from '@/components/ui/textarea';
 import { Coins, CreditCard, LoaderCircle } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { getCustomer } from '@/lib/http/api';
-import { Customer } from '@/lib/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createOrder, getCustomer } from '@/lib/http/api';
+import { Customer, OrderData } from '@/lib/types';
+import { v7 as uuidv7 } from "uuid"
 import AddAddress from './addAddress';
-import { z } from 'zod/v4';
+import { uuidv4, z } from 'zod/v4';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -39,6 +40,7 @@ export default function CustomerForm() {
         const searchParams = useSearchParams()
 
         const chosenCouponCode = useRef("");
+        const idempotencyKeyRef = useRef('');
         const cart = useAppSelector((state) => state.cart)
 
     const {data:customer, isLoading} = useQuery<Customer>({
@@ -47,6 +49,19 @@ export default function CustomerForm() {
             return await getCustomer().then(res => res.data)
         },
     })
+
+    const {mutate} = useMutation({
+        mutationKey: ["order"],
+        mutationFn: async(data: OrderData) => {
+            console.log("calling mutation fn.....");
+            const idempotencyKey = idempotencyKeyRef.current
+                ? idempotencyKeyRef.current
+                : (idempotencyKeyRef.current = uuidv7() + customer?._id);
+
+            await createOrder(data, idempotencyKey)
+        },
+        retry: 3
+    }) 
 
     if(isLoading){
         return (
@@ -62,17 +77,18 @@ export default function CustomerForm() {
             alert("Restaurant ID is required")
             return
         }
-        const orderData = {
+        const orderData: OrderData = {
             cart: cart.cartItems,
             couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
             tenantId: tenantId,
-            customerId: customer?._id,
-            comments:  data.comment,
+            customerId: customer ? customer._id : "",
+            comment:  data.comment,
             address: data.address,
             paymentMode: data.paymentMode
         }
-        console.log("order data: ",orderData);
+        mutate(orderData)
     }
+
 
     return (
         
