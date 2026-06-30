@@ -1,3 +1,5 @@
+import { CartItem } from "../store/features/cart/cartSlice"
+
 export interface User {
     id: number,
     firstName: string
@@ -89,3 +91,13 @@ export type CouponCodeData = {
     code: string
     tenantId: string
 }
+
+export type OrderData = {
+    cart: CartItem[];
+    couponCode: string;
+    tenantId: string;
+    customerId: string;
+    comment: string;
+    address: string;
+    paymentMode: string;
+};
