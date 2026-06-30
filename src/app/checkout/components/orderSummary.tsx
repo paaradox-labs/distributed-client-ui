@@ -16,7 +16,7 @@ const TAXES_PERCENTAGE = 18
 // todo: move this to server & calculate this later as per our business needs
 const DELIVERY_CHARGES = 20
 
-const OrderSummary = () => {
+const OrderSummary = ({handleCouponCodeChange}: {handleCouponCodeChange: (code: string) => void}) => {
     const searchParams = useSearchParams()
     const cart = useAppSelector((state) => state.cart.cartItems)
     const [discountPercentage, setDiscountPercentage] = useState(0)
@@ -63,10 +63,12 @@ const OrderSummary = () => {
 
             if(data.valid){
                 setDiscountError("")
+                handleCouponCodeChange(couponCodeRef.current ? couponCodeRef.current.value : "")
                 setDiscountPercentage(data.discount)
                 return
             }
             setDiscountError("Coupon is expired")
+            handleCouponCodeChange("")
             setDiscountPercentage(0)
 
         },   
