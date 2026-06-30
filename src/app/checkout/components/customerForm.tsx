@@ -12,7 +12,7 @@ import { createOrder, getCustomer } from '@/lib/http/api';
 import { Customer, OrderData } from '@/lib/types';
 import { v7 as uuidv7 } from "uuid"
 import AddAddress from './addAddress';
-import { uuidv4, z } from 'zod/v4';
+import { z } from 'zod/v4';
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -50,17 +50,25 @@ export default function CustomerForm() {
         },
     })
 
-    const {mutate} = useMutation({
+    const {mutate, isPending: isPlaceOrderPending} = useMutation({
         mutationKey: ["order"],
         mutationFn: async(data: OrderData) => {
-            console.log("calling mutation fn.....");
             const idempotencyKey = idempotencyKeyRef.current
                 ? idempotencyKeyRef.current
                 : (idempotencyKeyRef.current = uuidv7() + customer?._id);
-
-            await createOrder(data, idempotencyKey)
+            return await createOrder(data, idempotencyKey).then(res => res.data)
         },
-        retry: 3
+        retry: 3,
+        onSuccess: (data: {paymentUrl: string | null}) => {
+            if(data.paymentUrl){
+                window.location.href = data.paymentUrl
+            }
+
+            alert("Order placed successfully")
+
+            // todo: redirect on cash payment mode
+            // todo: 1. Clear the cart from store. 2. Redirect the user to order status page.
+        }
     }) 
 
     if(isLoading){
@@ -211,7 +219,10 @@ onValueChange={field.onChange}
                     </div>
                 </CardContent>
             </Card>
-            <OrderSummary handleCouponCodeChange={(code) => {chosenCouponCode.current = code }} />
+            <OrderSummary 
+            handleCouponCodeChange={(code) => {chosenCouponCode.current = code }} 
+            isPlaceOrderPending={isPlaceOrderPending}
+            />
         </div>
             </form>
         </Form>

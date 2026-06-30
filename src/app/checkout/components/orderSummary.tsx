@@ -16,7 +16,7 @@ const TAXES_PERCENTAGE = 18
 // todo: move this to server & calculate this later as per our business needs
 const DELIVERY_CHARGES = 20
 
-const OrderSummary = ({handleCouponCodeChange}: {handleCouponCodeChange: (code: string) => void}) => {
+const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCouponCodeChange: (code: string) => void, isPlaceOrderPending: boolean}) => {
     const searchParams = useSearchParams()
     const cart = useAppSelector((state) => state.cart.cartItems)
     const [discountPercentage, setDiscountPercentage] = useState(0)
@@ -152,7 +152,16 @@ const OrderSummary = ({handleCouponCodeChange}: {handleCouponCodeChange: (code: 
                     </div>
 
                     <div className="text-right mt-6">
-                        <Button>Place order</Button>
+                        <Button disabled={isPlaceOrderPending}>
+                        {isPlaceOrderPending ? (
+                            <span className="flex items-center gap-2">
+                                <LoaderCircle className="animate-spin" />
+                                <span>Please wait...</span>
+                            </span>
+                        ) : (
+                            <span>Place order</span>
+                        )}
+                    </Button>
                     </div>
                 </CardContent>
             </Card>
