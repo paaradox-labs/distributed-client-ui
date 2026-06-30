@@ -1,6 +1,6 @@
+/* eslint-disable react-hooks/refs */
 "use client"
 
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -16,6 +16,9 @@ import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import OrderSummary from './orderSummary';
+import { useAppSelector } from '@/lib/store/hooks';
+import { useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 const formSchema = z.object({
     address: z.string({
@@ -33,6 +36,11 @@ export default function CustomerForm() {
             resolver: standardSchemaResolver(formSchema)
         })
 
+        const searchParams = useSearchParams()
+
+        const chosenCouponCode = useRef("");
+        const cart = useAppSelector((state) => state.cart)
+
     const {data:customer, isLoading} = useQuery<Customer>({
         queryKey: ["customer"],
         queryFn: async() => {
@@ -49,11 +57,25 @@ export default function CustomerForm() {
     }
 
     const handlePlaceOrder = (data: z.infer<typeof formSchema>) => {
-        // handle place order call
-        console.log(data)
+        const tenantId = searchParams.get("restaurantId")
+        if(!tenantId) {
+            alert("Restaurant ID is required")
+            return
+        }
+        const orderData = {
+            cart: cart.cartItems,
+            couponCode: chosenCouponCode.current ? chosenCouponCode.current : "",
+            tenantId: tenantId,
+            customerId: customer?._id,
+            comments:  data.comment,
+            address: data.address,
+            paymentMode: data.paymentMode
+        }
+        console.log("order data: ",orderData);
     }
 
     return (
+        
         <Form {...customerForm} >
             <form onSubmit={customerForm.handleSubmit(handlePlaceOrder)}>
                 <div className="flex max-w-7xl mx-auto gap-6 mt-16">
@@ -173,7 +195,7 @@ onValueChange={field.onChange}
                     </div>
                 </CardContent>
             </Card>
-            <OrderSummary />
+            <OrderSummary handleCouponCodeChange={(code) => {chosenCouponCode.current = code }} />
         </div>
             </form>
         </Form>
