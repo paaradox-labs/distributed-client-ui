@@ -48,7 +48,16 @@ const MobileMenu = () => {
                   Menu
                 </Link>
               </li>
-
+              <li className="pointer-events-none opacity-50 cursor-not-allowed">
+                <Link
+                  href="/"
+                  aria-disabled="true"
+                  tabIndex={-1}
+                  className="block py-1"
+                >
+                  Orders
+                </Link>
+              </li>
             </ul>
 
             <div className="flex items-center gap-3 py-3 border-t border-b border-gray-100 font-medium text-gray-700">
