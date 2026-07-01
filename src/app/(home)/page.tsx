@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import ProductList from "./components/product-list";
+import ProductsSkeleton from "./components/products-skeleton";
 import { Suspense } from "react";
 
 export default async function Home({searchParams}: {searchParams: Promise<{restaurantId: string}>}) {
@@ -41,8 +42,7 @@ export default async function Home({searchParams}: {searchParams: Promise<{resta
           </div>
         </div>
       </section>  
-      {/* todo: Add Skeleton Component */}
-      <Suspense fallback={`Loading...`}>
+      <Suspense fallback={<ProductsSkeleton />}>
       <ProductList restaurantId={restaurantId}/> 
       </Suspense>
     </>
