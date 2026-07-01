@@ -17,9 +17,10 @@ import { standardSchemaResolver } from '@hookform/resolvers/standard-schema';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import OrderSummary from './orderSummary';
-import { useAppSelector } from '@/lib/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { clearCart } from '@/lib/store/features/cart/cartSlice';
 
 const formSchema = z.object({
     address: z.string({
@@ -32,7 +33,7 @@ const formSchema = z.object({
 })
 
 export default function CustomerForm() {
-
+        const dispatch = useAppDispatch()
         const customerForm = useForm<z.infer<typeof formSchema>>({ 
             resolver: standardSchemaResolver(formSchema)
         })
@@ -65,6 +66,7 @@ export default function CustomerForm() {
             }
 
             alert("Order placed successfully")
+            dispatch(clearCart())
 
             // todo: redirect on cash payment mode
             // todo: 1. Clear the cart from store. 2. Redirect the user to order status page.
