@@ -24,6 +24,16 @@ const ProductList = async( {restaurantId}: {restaurantId: string } ) => {
 
   const products: {data: Product[]} = await productsResponse.json()
 
+  if (!categories?.length || !products?.data?.length) {
+    return (
+      <section>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24 text-center">
+          <p className="text-muted-foreground">No products available for this restaurant.</p>
+        </div>
+      </section>
+    )
+  }
+
   return (
         <section>
       <div  className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24">
@@ -39,13 +49,22 @@ const ProductList = async( {restaurantId}: {restaurantId: string } ) => {
     </TabsList>
     {
       categories.map((category) => {
+        const filteredProducts = products?.data?.filter(
+          (product) => product.category._id === category._id
+        ) ?? []
         return (
           <TabsContent key={category._id} value={category._id}>
+        {filteredProducts.length > 0 ? (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-        {products.data.filter(product => product.category._id ===  category._id).map((product) => (
+        {filteredProducts.map((product) => (
         <ProductCard product={product} key={product._id} />
       ))}
     </div>
+    ) : (
+      <p className="text-muted-foreground text-center py-12">
+        No products available
+      </p>
+    )}
     </TabsContent>
         )
       })
