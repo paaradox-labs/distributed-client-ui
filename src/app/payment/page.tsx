@@ -4,12 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, CheckCircle2, CircleX, LayoutDashboard, Store } from 'lucide-react';
 import Link from 'next/link';
+import CartCleaner from '../checkout/components/cartCleaner';
 
 const Payment = async({searchParams}: {searchParams:  Promise<{success: string; orderId: string}>}) => {
 
     const params = await searchParams
     const isOrderSuccess = params.success === "true"
     return (
+       <>
+       {
+        isOrderSuccess && <CartCleaner />
+       }
         <div className="flex flex-col items-center gap-4 w-full mt-16 md:mt-32 px-4 md:px-0">
             {isOrderSuccess ? (
                 <>
@@ -81,6 +86,7 @@ const Payment = async({searchParams}: {searchParams:  Promise<{success: string; 
                 </Button>
             )}
         </div>
+       </>
     );
 };
 
