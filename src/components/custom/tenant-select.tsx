@@ -12,10 +12,17 @@ const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const [value, setValue] = useState("")
 
     useEffect(() => {
-        const id = searchParams.get("restaurantId") || localStorage.getItem('restaurantId') || ""
-        // eslint-disable-next-line react-hooks/set-state-in-effect
+        const urlId = searchParams.get("restaurantId")
+        const storedId = localStorage.getItem('restaurantId')
+        const id = urlId || storedId || ""
         setValue(id)
-    }, [searchParams])
+
+        if (storedId && !urlId) {
+            const params = new URLSearchParams(searchParams.toString())
+            params.set('restaurantId', storedId)
+            router.replace(`?${params.toString()}`)
+        }
+    }, [searchParams, router])
 
     const handleValueChange = (value:string) => {
         localStorage.setItem('restaurantId', value)
