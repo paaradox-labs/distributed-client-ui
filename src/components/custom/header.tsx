@@ -52,8 +52,8 @@ const Header = async () => {
             <li className="hover:text-primary transition-colors">
               <Link href="/">Menu</Link>
             </li>
-            <li className="hover:text-primary transition-colors">
-              <Link href="/">Orders</Link>
+            <li className="pointer-events-none opacity-50 cursor-not-allowed">
+              <Link href="/" aria-disabled="true" tabIndex={-1}>Orders</Link>
             </li>
           </ul>
 

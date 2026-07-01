@@ -44,7 +44,7 @@ const ProductModal = ({
         const toppingsTotal = selectedToppings.reduce((acc,curr) => acc + curr.price, 0)
 
         const configPricing = Object.entries(chosenConfig).reduce((acc, [key,value]:[string,string]) => {
-            const price = product.priceConfiguration[key].availableOptions[value]
+            const price = product.priceConfiguration[key]?.availableOptions?.[value] ?? 0
             return acc + price
         },0)
         return toppingsTotal + configPricing

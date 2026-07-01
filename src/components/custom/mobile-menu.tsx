@@ -48,11 +48,12 @@ const MobileMenu = () => {
                   Menu
                 </Link>
               </li>
-              <li>
+              <li className="pointer-events-none opacity-50 cursor-not-allowed">
                 <Link
                   href="/"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block hover:text-primary transition-colors py-1"
+                  aria-disabled="true"
+                  tabIndex={-1}
+                  className="block py-1"
                 >
                   Orders
                 </Link>
