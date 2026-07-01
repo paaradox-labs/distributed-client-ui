@@ -52,9 +52,7 @@ const Header = async () => {
             <li className="hover:text-primary transition-colors">
               <Link href="/">Menu</Link>
             </li>
-            <li className="hover:text-primary transition-colors">
-              <Link href="/">Orders</Link>
-            </li>
+
           </ul>
 
           <CartCounter />

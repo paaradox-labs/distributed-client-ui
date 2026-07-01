@@ -48,15 +48,7 @@ const MobileMenu = () => {
                   Menu
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block hover:text-primary transition-colors py-1"
-                >
-                  Orders
-                </Link>
-              </li>
+
             </ul>
 
             <div className="flex items-center gap-3 py-3 border-t border-b border-gray-100 font-medium text-gray-700">
