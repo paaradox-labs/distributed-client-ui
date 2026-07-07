@@ -8,10 +8,26 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { Order } from '@/lib/types';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
-import React from 'react';
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 
 const Orders = async () => {
+    
+    const response = await fetch (`${process.env.BACKEND_URL}/api/order/orders/mine`, {
+        headers: {
+            "Authorization": `Bearer ${(await cookies()).get("accessToken")?.value}`
+        }
+    });
+
+    if(!response.ok){
+        throw new Error("Error fetching my orders")
+    }
+
+    const orders = await response.json();    
+    
     return (
         <div className="max-w-6xl mx-auto px-4 md:px-8 mt-8 mb-12">
             <Card>
@@ -23,76 +39,37 @@ const Orders = async () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="w-[100px]">ID</TableHead>
-                                <TableHead>Payment Status</TableHead>
-                                <TableHead>Payment Method</TableHead>
-                                <TableHead>Date Time</TableHead>
+                                <TableHead className="w-[100px] text-center">ID</TableHead>
+                                <TableHead className="text-center">Payment Status</TableHead>
+                                <TableHead className="text-center">Payment Method</TableHead>
+                                <TableHead className="text-center">Date Time</TableHead>
                                 <TableHead>Order Status</TableHead>
                                 <TableHead className="text-right">Amount</TableHead>
-                                <TableHead className="text-right pl-16 md:pl-24">Details</TableHead>
+                                <TableHead className="text-center pl-16 md:pl-24">Details</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow>
-                                <TableCell className="font-medium">INV001</TableCell>
-                                <TableCell>Paid</TableCell>
-                                <TableCell>Credit Card</TableCell>
-                                <TableCell>22.05.24 13:22</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">Completed</Badge>
+                            {
+                                orders.map((order: Order) => {
+                                    return (
+                                        <TableRow key={order._id}>
+                                <TableCell className="font-medium py-4 text-center">{order._id}</TableCell>
+                                <TableCell className="py-4 text-center">{capitalize(order.paymentStatus)}</TableCell>
+                                <TableCell className="py-4 text-center">{capitalize(order.paymentMode)}</TableCell>
+                                <TableCell className="py-4 text-center">{new Date(order.createdAt).toLocaleString()}</TableCell>
+                                <TableCell className="py-4">
+                                    <Badge variant="outline">{capitalize(order.orderStatus)}</Badge>
                                 </TableCell>
-                                <TableCell className="text-right font-medium">$250.00</TableCell>
-                                <TableCell className="text-right pl-16 md:pl-24">
-                                    <Link href="/order/1223" className="underline text-primary hover:text-primary/80 font-medium whitespace-nowrap">
+                                <TableCell className="text-right font-medium py-4">₹{order.total.toFixed(2)}</TableCell>
+                                <TableCell className="text-center py-4 pl-16 md:pl-24">
+                                    <Link href={`/order/${order._id}`} className="underline text-primary hover:text-primary/80 font-medium whitespace-nowrap">
                                         More details
                                     </Link>
                                 </TableCell>
                             </TableRow>
-                            <TableRow>
-                                <TableCell className="font-medium">INV001</TableCell>
-                                <TableCell>Paid</TableCell>
-                                <TableCell>Credit Card</TableCell>
-                                <TableCell>22.05.24 13:22</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">Completed</Badge>
-                                </TableCell>
-                                <TableCell className="text-right font-medium">$250.00</TableCell>
-                                <TableCell className="text-right pl-16 md:pl-24">
-                                    <Link href="/order/1223" className="underline text-primary hover:text-primary/80 font-medium whitespace-nowrap">
-                                        More details
-                                    </Link>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-medium">INV001</TableCell>
-                                <TableCell>Paid</TableCell>
-                                <TableCell>Credit Card</TableCell>
-                                <TableCell>22.05.24 13:22</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">Completed</Badge>
-                                </TableCell>
-                                <TableCell className="text-right font-medium">$250.00</TableCell>
-                                <TableCell className="text-right pl-16 md:pl-24">
-                                    <Link href="/order/1223" className="underline text-primary hover:text-primary/80 font-medium whitespace-nowrap">
-                                        More details
-                                    </Link>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell className="font-medium">INV001</TableCell>
-                                <TableCell>Paid</TableCell>
-                                <TableCell>Credit Card</TableCell>
-                                <TableCell>22.05.24 13:22</TableCell>
-                                <TableCell>
-                                    <Badge variant="outline">Completed</Badge>
-                                </TableCell>
-                                <TableCell className="text-right font-medium">$250.00</TableCell>
-                                <TableCell className="text-right pl-16 md:pl-24">
-                                    <Link href="/order/1223" className="underline text-primary hover:text-primary/80 font-medium whitespace-nowrap">
-                                        More details
-                                    </Link>
-                                </TableCell>
-                            </TableRow>
+                                    )       
+                                }) 
+                            }
                         </TableBody>
                     </Table>
                 </CardContent>
