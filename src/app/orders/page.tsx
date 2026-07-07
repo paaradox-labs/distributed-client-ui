@@ -9,6 +9,8 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { Order } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { ShoppingBag } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 
@@ -26,7 +28,7 @@ const Orders = async () => {
         throw new Error("Error fetching my orders")
     }
 
-    const orders = await response.json();    
+    const orders = (await response.json()) || []; 
     
     return (
         <div className="max-w-6xl mx-auto px-4 md:px-8 mt-8 mb-12">
@@ -36,7 +38,19 @@ const Orders = async () => {
                     <CardDescription className="text-base">My complete order history.</CardDescription>
                 </CardHeader>
                 <CardContent className="px-6 md:px-8">
-                    <Table>
+                    {orders.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-muted-foreground/20 rounded-lg">
+                            <ShoppingBag className="h-16 w-16 text-muted-foreground mb-6" />
+                            <h3 className="text-xl font-semibold mb-2">No orders yet</h3>
+                            <p className="text-muted-foreground max-w-sm mb-6">
+                                Start exploring our menu and place your first order!
+                            </p>
+                            <Button asChild>
+                                <Link href="/">Browse Menu</Link>
+                            </Button>
+                        </div>
+                    ): (
+                        <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead className="w-[100px] text-center">ID</TableHead>
@@ -72,6 +86,7 @@ const Orders = async () => {
                             }
                         </TableBody>
                     </Table>
+                    )}
                 </CardContent>
             </Card>
         </div>
