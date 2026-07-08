@@ -28,7 +28,7 @@ const Orders = async () => {
         throw new Error("Error fetching my orders")
     }
 
-    const orders = (await response.json()) || []; 
+    const orders: Order[] = ((await response.json()) || []).sort((a: Order, b: Order) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); 
     
     return (
         <div className="max-w-6xl mx-auto px-4 md:px-8 mt-8 mb-12">

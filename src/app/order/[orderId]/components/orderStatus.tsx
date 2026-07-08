@@ -15,11 +15,11 @@ const steps = [
 const StepperChanger = () => {
     const {setStep, nextStep} = useStepper()
 
-    useEffect(() => {
+    useEffect(() => {   
         setInterval(() => {
             nextStep()
-        },4000)
-    },[])
+        },2000)
+    },[nextStep])
 
     return <></>
 }

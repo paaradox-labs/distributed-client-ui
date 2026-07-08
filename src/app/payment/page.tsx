@@ -53,7 +53,7 @@ const Payment = async({searchParams}: {searchParams:  Promise<{success: string; 
                             <LayoutDashboard size={20} />
                             <h2 className="text-base font-medium">Order reference: </h2>
                             <Link
-                                href={`/order-status/${params.orderId}`}
+                                href={`/order/${params.orderId}`}
                                 className="underline">
                                 {params.orderId}
                             </Link>
@@ -71,7 +71,7 @@ const Payment = async({searchParams}: {searchParams:  Promise<{success: string; 
             {isOrderSuccess ? (
                 <Button asChild className="mt-6">
                     <Link
-                        href={`/order-status/${params.orderId}`}
+                        href={`/order/${params.orderId}`}
                         className="flex items-center gap-2">
                         <ArrowLeft size={20} className="text-white" />
                         <span>Go to order status page</span>
