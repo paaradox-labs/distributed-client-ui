@@ -1,0 +1,62 @@
+import * as React from "react";
+
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { StepSharedProps } from "./types";
+import { useStepper } from "./use-stepper";
+
+type StepButtonContainerProps = StepSharedProps & {
+	children?: React.ReactNode;
+};
+
+const StepButtonContainer = ({
+	isCurrentStep,
+	isCompletedStep,
+	children,
+	isError,
+	isLoading: isLoadingProp,
+	onClickStep,
+}: StepButtonContainerProps) => {
+	const {
+		clickable,
+		isLoading: isLoadingContext,
+		variant,
+		styles,
+	} = useStepper();
+
+	const currentStepClickable = clickable || !!onClickStep;
+
+	const isLoading = isLoadingProp || isLoadingContext;
+
+	if (variant === "line") {
+		return null;
+	}
+
+	return (
+		<div
+			tabIndex={currentStepClickable ? 0 : -1}
+			className={cn(
+				"stepper__step-button-container",
+				"rounded-full p-0",
+				"w-[var(--step-icon-size)] h-[var(--step-icon-size)]",
+				"border-2 flex justify-center items-center",
+				"bg-muted text-muted-foreground border-muted-foreground/20",
+				"data-[clickable=true]:cursor-pointer",
+				"data-[active=true]:bg-primary data-[active=true]:border-primary data-[active=true]:text-primary-foreground",
+				"data-[current=true]:border-primary data-[current=true]:bg-primary data-[current=true]:text-primary-foreground",
+				"data-[invalid=true]:bg-destructive data-[invalid=true]:border-destructive data-[invalid=true]:text-destructive-foreground",
+				styles?.["step-button-container"],
+			)}
+			aria-current={isCurrentStep ? "step" : undefined}
+			data-current={isCurrentStep}
+			data-invalid={isError && (isCurrentStep || isCompletedStep)}
+			data-active={isCompletedStep}
+			data-clickable={currentStepClickable}
+			data-loading={isLoading && (isCurrentStep || isCompletedStep)}
+		>
+			{children}
+		</div>
+	);
+};
+
+export { StepButtonContainer };
