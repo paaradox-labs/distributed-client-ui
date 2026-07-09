@@ -115,27 +115,27 @@ const ProductModal = ({
   <DialogTrigger
   className="bg-orange-500 hover:bg-orange-500/90 text-white px-6 py-2 rounded-full shadow hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
   >Choose</DialogTrigger>
-  <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-3xl p-0">
+  <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-3xl p-0 overflow-y-auto max-h-[90dvh]">
     <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-1/3 bg-white rounded-t-lg md:rounded-l-lg md:rounded-t-none p-4 md:p-8 flex items-center justify-center">
-        <div className="relative h-28 w-28 sm:h-[180px] sm:w-[180px] md:h-[250px] md:w-[250px] rounded-xl overflow-hidden">
+      <div className="w-full md:w-1/3 bg-white rounded-t-lg md:rounded-l-lg md:rounded-t-none p-6 md:p-8 flex items-center justify-center">
+        <div className="relative h-40 w-40 sm:h-[180px] sm:w-[180px] md:h-[250px] md:w-[250px] rounded-xl overflow-hidden">
           <Image
             src={product.image}
             alt={product.name}
             fill
             className="object-contain"
-            sizes="(max-width: 768px) 112px, (max-width: 1024px) 180px, 250px"
+            sizes="(max-width: 768px) 160px, (max-width: 1024px) 180px, 250px"
           />
         </div>
       </div>
-      <div className="w-full md:w-2/3 p-4 md:p-8 bg-muted">
+      <div className="w-full md:w-2/3 p-6 md:p-8 bg-muted">
          <h3 className="text-xl font-bold">{product.name}</h3>
-         <p className="mt-1">{product.description}</p>
+         <p className="mt-1 text-sm md:text-base">{product.description}</p>
 
     {Object.entries(product.category.priceConfiguration).map(([key,value]) => {
         return(
             <div key={key}>
-        <h4 className="mt-4 md:mt-6">
+        <h4 className="mt-6 font-semibold">
           Choose the {`${key}`}
         </h4>
       <RadioGroup
@@ -143,7 +143,7 @@ const ProductModal = ({
                                             handleRadioChange(key, data)
                                         }}
                                         defaultValue={value.availableOptions[0]}
-                                        className="grid grid-cols-3 gap-2 md:gap-4 mt-2">
+                                        className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4 mt-3">
                                         {
                                             value.availableOptions.map((option) => {
                                                 return(
@@ -156,7 +156,7 @@ const ProductModal = ({
                                             />
                                             <Label
                                                 htmlFor={option}
-                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-2 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                                className="flex flex-col items-center justify-between rounded-md border-2 bg-white p-3 md:p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-sm md:text-base">
                                                 {option}
                                             </Label>
                                         </div>

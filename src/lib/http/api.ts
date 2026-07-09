@@ -24,3 +24,5 @@ export const createOrder = (data: OrderData, idempotencyKey: string) => api.post
         "Idempotency-Key":idempotencyKey
     }
 })
+
+export const getSingleOrder = (orderId: string) => api.get(`${ORDER_SERVICE_PREFIX}/orders/${orderId}?fields=orderStatus`)

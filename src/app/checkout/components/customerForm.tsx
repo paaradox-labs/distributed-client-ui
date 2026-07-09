@@ -104,8 +104,8 @@ export default function CustomerForm() {
         
         <Form {...customerForm} >
             <form onSubmit={customerForm.handleSubmit(handlePlaceOrder)}>
-                <div className="flex max-w-7xl mx-auto gap-6 mt-16">
-            <Card className="w-3/5 border-none">
+                <div className="flex flex-col lg:flex-row max-w-7xl mx-auto gap-6 mt-8 md:mt-16 px-4 md:px-6">
+            <Card className="w-full lg:w-3/5 border-none">
                 <CardHeader>
                     <CardTitle>Customer details</CardTitle>
                 </CardHeader>
@@ -134,16 +134,16 @@ export default function CustomerForm() {
                                     <FormControl>
                                         <RadioGroup
                                         onValueChange={field.onChange}
-                                    className="grid grid-cols-2 gap-6 mt-2">
+                                    className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
                                         {
                                             customer?.addresses.map((address) => {
                                                 return(
-                                                     <Card className="p-6" key={address.text}>
-                                        <div className="flex items-center space-x-2">
+                                                     <Card className="p-4" key={address.text}>
+                                        <div className="flex items-start space-x-2">
                                             <FormControl>
-                                                <RadioGroupItem value={address.text} id={address.text} />
+                                                <RadioGroupItem value={address.text} id={address.text} className="mt-0.5" />
                                             </FormControl>
-                                            <Label htmlFor={address.text} className="leading-normal">
+                                            <Label htmlFor={address.text} className="leading-normal text-sm">
                                                {
                                                 address.text
                                                }
@@ -167,8 +167,8 @@ export default function CustomerForm() {
                                     <FormControl>
  <RadioGroup 
 onValueChange={field.onChange}
- className="flex gap-6">
-                                <div className="w-36">
+ className="flex flex-col sm:flex-row gap-4">
+                                <div className="w-full sm:w-36">
                                     <FormControl>
                                          <RadioGroupItem
                                         value={'card'}
@@ -184,7 +184,7 @@ onValueChange={field.onChange}
                                         <span className="ml-2">Card</span>
                                     </Label>
                                 </div>
-                                <div className="w-36">
+                                <div className="w-full sm:w-36">
                                     <FormControl>
                                         <RadioGroupItem
                                         value={'cash'}
