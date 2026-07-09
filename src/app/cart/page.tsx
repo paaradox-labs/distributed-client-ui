@@ -27,12 +27,12 @@ const Cart = async ({ searchParams }: { searchParams: Promise<{ restaurantId?: s
 
    return (
         <section>
-            <div className="container mx-auto py-6">
+            <div className="max-w-4xl mx-auto px-4 md:px-6 py-6">
                 <h1 className="text-lg font-bold">Shopping cart</h1>
                 {restaurantId && (
                     <p className="text-sm text-gray-500 mt-1">Restaurant ID: {restaurantId}</p>
                 )}
-                <div className="bg-white rounded-lg p-6 mt-6">
+                <div className="bg-white rounded-lg p-4 sm:p-6 mt-6">
                     <CartItems restaurantId={restaurantId} />
                 </div>
             </div>

@@ -83,7 +83,7 @@ const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCoupo
     }
 
   return (
-    <Card className="w-2/5 border-none h-auto self-start">
+    <Card className="w-full lg:w-2/5 border-none h-auto self-start">
                 <CardHeader>
                     <CardTitle>Order summary</CardTitle>
                 </CardHeader>
@@ -123,7 +123,7 @@ const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCoupo
                             </div>
                         )
                     }
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <Input
                             id="coupon"
                             name='code'
@@ -139,7 +139,7 @@ const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCoupo
                             }}
                         />
 
-                        <Button onClick={handleCouponValidation} variant={'outline'} disabled={isPending}>
+                        <Button onClick={handleCouponValidation} variant={'outline'} disabled={isPending} className="sm:w-auto">
                             {isPending ? (
                                 <>
                                     <LoaderCircle className="animate-spin"/>
@@ -151,8 +151,8 @@ const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCoupo
                         </Button> 
                     </div>
 
-                    <div className="text-right mt-6">
-                        <Button disabled={isPlaceOrderPending}>
+                    <div className="mt-6">
+                        <Button disabled={isPlaceOrderPending} className="w-full">
                         {isPlaceOrderPending ? (
                             <span className="flex items-center gap-2">
                                 <LoaderCircle className="animate-spin" />

@@ -31,12 +31,12 @@ const CartItems = ({ restaurantId }: { restaurantId?: string }) => {
 
     if (!cart.length) {
         return (
-            <div className="flex items-center gap-2">
-                <ShoppingCart />
-                <p className="text-gray-500">
+            <div className="flex flex-col items-center gap-4 py-16">
+                <ShoppingCart className="h-12 w-12 text-muted-foreground" />
+                <p className="text-gray-500 text-center">
                     Your cart is empty!{' '}
                     <Link
-                        className="text-orange-500"
+                        className="text-orange-500 hover:underline"
                         href={restaurantId ? `/?restaurantId=${restaurantId}` : '/'}>
                         Continue shopping.
                     </Link>
@@ -46,18 +46,20 @@ const CartItems = ({ restaurantId }: { restaurantId?: string }) => {
     }
 
     return (
-        <div className="flex flex-col gap-8 ">
+        <div className="flex flex-col gap-2">
             {cart.map((cartItem) => (
                 <CartItem key={cartItem.hash} item={cartItem} />
             ))}
-            <div className="flex justify-between items-center">
-                <span className="font-bold text-xl">&#8377;{finalTotal}</span>
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mt-6 pt-4 border-t">
+                <span className="font-bold text-xl text-center sm:text-left">Total: &#8377;{finalTotal}</span>
                 <Button
                  onClick={() => {
                         const id = restaurantId || localStorage.getItem('restaurantId')
                         router.push(id ? `/checkout/?restaurantId=${id}` : '/checkout')
-                    }}>
-                    Checkout
+                    }}
+                    className="w-full sm:w-auto"
+                >
+                    Proceed to Checkout
                     <ArrowRight size={16} className="ml-2" />
                 </Button>
             </div>
