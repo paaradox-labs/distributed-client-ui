@@ -14,7 +14,7 @@ interface StepInternalConfig {
 
 interface FullStepProps extends StepProps, StepInternalConfig {}
 
-const Step = React.forwardRef<HTMLLIElement, StepProps>((props, ref: React.Ref<HTMLLIElement>) => {
+const Step = React.forwardRef<HTMLDivElement, StepProps>((props, ref: React.Ref<HTMLDivElement>) => {
     const {
         children,
         description,
