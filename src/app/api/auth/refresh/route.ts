@@ -35,10 +35,10 @@ export async function POST() {
                     !parsedAccessToken.value ||
                     !parsedRefreshToken.value
                 ) {
-                    return {
+                    return Response.json({
                         type: 'error',
                         message: 'Malformed auth cookies received!',
-                    };
+                    });
                 }
         
                 const cookieStore = await cookies();
