@@ -1,6 +1,6 @@
 ARG NODE_VERSION=24.18.0
 
-FROM node:${NODE_VERSION}-alpine as builder
+FROM node:${NODE_VERSION}-alpine AS builder
 
 WORKDIR /home/node/app
 
@@ -14,7 +14,7 @@ COPY . .
 RUN corepack enable pnpm && pnpm run build
 
 
-FROM node:${NODE_VERSION}-alpine as runner
+FROM node:${NODE_VERSION}-alpine AS runner
 
 USER node
 
