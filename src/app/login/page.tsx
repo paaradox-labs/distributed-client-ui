@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useActionState, useEffect } from 'react';
+import { Suspense, useActionState, useEffect } from 'react';
 import { useFormStatus } from 'react-dom';
 import { LoaderCircle } from 'lucide-react';
 import login from '@/lib/actions/login';
@@ -27,7 +27,7 @@ const SubmitButton = () => {
     );
 };
 
-const Login = () => {
+const LoginForm = () => {
 
 
 
@@ -116,4 +116,12 @@ const Login = () => {
     );
 };
 
-export default Login;
+const LoginPage = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LoginForm />
+        </Suspense>
+    );
+};
+
+export default LoginPage;
