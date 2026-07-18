@@ -9,14 +9,15 @@ import { useRouter, useSearchParams } from 'next/navigation';
 const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const router = useRouter();
     const searchParams = useSearchParams()
-    const [value, setValue] = useState("")
+    const [value, setValue] = useState(() => {
+        const urlId = searchParams.get("restaurantId")
+        const storedId = localStorage.getItem('restaurantId')
+        return urlId || storedId || ""
+    })
 
     useEffect(() => {
         const urlId = searchParams.get("restaurantId")
         const storedId = localStorage.getItem('restaurantId')
-        const id = urlId || storedId || ""
-        setValue(id)
-
         if (storedId && !urlId) {
             const params = new URLSearchParams(searchParams.toString())
             params.set('restaurantId', storedId)

@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
-type IconType = LucideIcon | React.ComponentType<any> | undefined;
+type IconType = LucideIcon | React.ComponentType<Record<string, unknown>> | undefined;
 
 type StepItem = {
 	id?: string;
