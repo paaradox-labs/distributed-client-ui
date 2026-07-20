@@ -12,12 +12,9 @@ const VerticalStep = React.forwardRef<HTMLDivElement, StepSharedProps>((props, r
         isLoading,
         onClickStep,
         variant,
-        clickable,
         checkIcon: checkIconContext,
         errorIcon: errorIconContext,
         styles,
-        steps,
-        setStep,
     } = useStepper();
 
     const {

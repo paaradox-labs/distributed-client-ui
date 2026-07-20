@@ -15,9 +15,9 @@ export function hashTheItem(payload: CartItem): string {
 }
 
 export function getFromPrice(product: Product): number {
-    const basePrice = Object.entries(product.priceConfiguration).filter(([key, value]) => {
+    const basePrice = Object.entries(product.priceConfiguration).filter(([, value]) => {
       return value.priceType === "base"
-    }).reduce((acc,[key,value]) => {
+    }).reduce((acc,[,value]) => {
       const smallestPrice = Math.min(...Object.values(value.availableOptions))
       return acc + smallestPrice
     },0)

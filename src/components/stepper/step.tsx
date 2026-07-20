@@ -16,7 +16,6 @@ interface FullStepProps extends StepProps, StepInternalConfig {}
 
 const Step = React.forwardRef<HTMLDivElement, StepProps>((props, ref: React.Ref<HTMLDivElement>) => {
     const {
-        children,
         description,
         icon,
         state,

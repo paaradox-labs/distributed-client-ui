@@ -47,7 +47,7 @@ const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCoupo
         return subTotal + taxesAmount + DELIVERY_CHARGES
     },[subTotal, taxesAmount])
 
-    const {mutate, isPending, isError, error, reset} = useMutation({
+    const {mutate, isPending, isError, reset} = useMutation({
         mutationKey: ["couponCode"],
         mutationFn: async() => {
             if(!couponCodeRef.current?.value) return
@@ -72,7 +72,7 @@ const OrderSummary = ({isPlaceOrderPending,handleCouponCodeChange}: {handleCoupo
             setDiscountPercentage(0)
 
         },   
-        onError: (error) => {
+        onError: () => {
             setDiscountError("")
         }
     })

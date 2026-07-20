@@ -47,7 +47,7 @@ const Refresher = ({ children }: { children: React.ReactNode }) => {
                 refreshAccessTokenRef.current?.();
                 console.log('Access token is refreshing...');
             }, refreshTime);
-        } catch (err: any) {}
+        } catch (_err: any) {}
     }, []);
 
     const refreshAccessToken = useCallback(async () => {
