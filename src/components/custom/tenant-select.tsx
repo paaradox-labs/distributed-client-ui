@@ -11,7 +11,7 @@ const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const searchParams = useSearchParams()
     const [value, setValue] = useState(() => {
         const urlId = searchParams.get("restaurantId")
-        const storedId = localStorage.getItem('restaurantId')
+        const storedId = typeof window !== 'undefined' ? localStorage.getItem('restaurantId') : null
         return urlId || storedId || ""
     })
 
