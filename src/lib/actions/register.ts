@@ -62,20 +62,18 @@ export default async function register(prevState: any, formdata: FormData) {
                     name: 'accessToken',
                     value: parsedAccessToken.value,
                     expires: parsedAccessToken.expires,
-                    httpOnly: (parsedAccessToken.httpOnly as unknown as boolean) || true,
-                    path: parsedAccessToken.path,
-                    domain: parsedAccessToken.domain,
-                    sameSite: parsedAccessToken.sameSite as 'strict',
+                    httpOnly: true,
+                    path: '/',
+                    sameSite: 'lax',
                 });
         
                 cookieStore.set({
                     name: 'refreshToken',
                     value: parsedRefreshToken.value,
                     expires: parsedRefreshToken.expires,
-                    httpOnly: (parsedRefreshToken.httpOnly as unknown as boolean) || true,
-                    path: parsedRefreshToken.path,
-                    domain: parsedRefreshToken.domain,
-                    sameSite: parsedRefreshToken.sameSite as 'strict',
+                    httpOnly: true,
+                    path: '/',
+                    sameSite: 'lax',
                 });
 
         return {

@@ -78,7 +78,7 @@ const Header = async () => {
           }
         </div>
 
-        <MobileMenu />
+        <MobileMenu isLoggedIn={!!session} />
       </nav>
     </header>
   )

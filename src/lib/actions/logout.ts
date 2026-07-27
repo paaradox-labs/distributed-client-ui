@@ -17,8 +17,9 @@ export const logout = async(returnTo?: string, restaurantId?: string) => {
         return false
     }
 
-    (await cookies()).delete("accessToken");
-    (await cookies()).delete("refreshToken")
+    const cookieStore = await cookies()
+    cookieStore.set({ name: "accessToken", value: "", expires: new Date(0), path: "/" })
+    cookieStore.set({ name: "refreshToken", value: "", expires: new Date(0), path: "/" })
 
     const loginParams = new URLSearchParams()
     if (restaurantId) loginParams.set('restaurantId', restaurantId)

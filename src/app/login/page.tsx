@@ -39,12 +39,12 @@ const LoginForm = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const returnTo = searchParams.get('returnTo') || '/'
-    const restaurantId = searchParams.get('restaurantId')
 
     useEffect(() => {
         if(state?.type === "success") {
-        router.push(returnTo)
-    }
+            router.refresh()
+            router.push(returnTo)
+        }
     },[router, state, returnTo])
 
     return (

@@ -1,4 +1,3 @@
-import { getSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import CartItems from "./cartItems/cartItems";
@@ -10,19 +9,6 @@ const Cart = async ({ searchParams }: { searchParams: Promise<{ restaurantId?: s
 
     if (!resolved.restaurantId && restaurantId) {
         redirect(`/cart?restaurantId=${restaurantId}`)
-    }
-
-    const session = await getSession()
-
-    if(!session){
-        const returnToQuery = restaurantId ? `?restaurantId=${restaurantId}` : ''
-        const returnTo = `/cart${returnToQuery}`
-
-        const loginParams = new URLSearchParams()
-        if (restaurantId) loginParams.set('restaurantId', restaurantId)
-        loginParams.set('returnTo', returnTo)
-
-        redirect(`/login?${loginParams.toString()}`)
     }
 
    return (

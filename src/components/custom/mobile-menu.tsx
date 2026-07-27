@@ -3,19 +3,29 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Phone, ShoppingBasket, Menu as MenuIcon, X } from "lucide-react"
-import { useSearchParams } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { Button } from "../ui/button"
 import { useAppSelector } from "@/lib/store/hooks"
+import { logout } from "@/lib/actions/logout"
 
-const MobileMenu = () => {
+const MobileMenu = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const searchParams = useSearchParams()
+  const pathname = usePathname()
   const cartItems = useAppSelector((state) => state.cart.cartItems)
   const cartCount = cartItems.reduce((acc, item) => acc + item.qty, 0)
+  const restaurantId = searchParams.get('restaurantId') || undefined
+  const returnTo = searchParams.toString() ? `${pathname}?${searchParams.toString()}` : pathname
 
-  const cartHref = searchParams.get('restaurantId')
-    ? `/cart?restaurantId=${searchParams.get('restaurantId')}`
+  const cartHref = restaurantId
+    ? `/cart?restaurantId=${restaurantId}`
     : '/cart'
+
+  const loginHref = (() => {
+    const params = new URLSearchParams()
+    if (restaurantId) params.set('restaurantId', restaurantId)
+    return params.toString() ? `/login?${params.toString()}` : '/login'
+  })()
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -104,12 +114,23 @@ const MobileMenu = () => {
           </div>
 
           <div className="mt-auto">
-            <Button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="w-full py-6 rounded-full font-bold text-base shadow-md shadow-primary/10"
-            >
-              Logout
-            </Button>
+            {isLoggedIn ? (
+              <Button
+                onClick={async () => {
+                  setIsMobileMenuOpen(false)
+                  await logout(returnTo, restaurantId)
+                }}
+                className="w-full py-6 rounded-full font-bold text-base shadow-md shadow-primary/10"
+              >
+                Logout
+              </Button>
+            ) : (
+              <Button asChild className="w-full py-6 rounded-full font-bold text-base shadow-md shadow-primary/10">
+                <Link href={loginHref} onClick={() => setIsMobileMenuOpen(false)}>
+                  Login
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </div>

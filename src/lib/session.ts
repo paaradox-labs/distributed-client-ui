@@ -6,10 +6,14 @@ export const getSession = async() => {
 }
 
 const getSelf  = async(): Promise<Session | null> => {
+    const accessToken = (await cookies()).get("accessToken")?.value
+    if (!accessToken) return null
+
     const response = await fetch(`${process.env.BACKEND_URL}/api/auth/auth/self`,{
         headers:{
-            Authorization: `Bearer ${(await cookies()).get("accessToken")?.value}`,
-        }
+            Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store",
     })
 
     if (!response.ok){
