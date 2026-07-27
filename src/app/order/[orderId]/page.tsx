@@ -4,6 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { Banknote, Coins, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { Order } from '@/lib/types';
 
 const SingleOrder = async({params}: {params: Promise<{orderId: string}>}) => {
@@ -12,6 +13,10 @@ const SingleOrder = async({params}: {params: Promise<{orderId: string}>}) => {
             "Authorization": `Bearer ${(await cookies()).get("accessToken")?.value}`
         }
     })
+
+    if (response.status === 404) {
+        notFound()
+    }
 
     if(!response.ok){
         throw new Error("Failed to fetch single order")
