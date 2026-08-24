@@ -2,7 +2,7 @@
 'use client'
 import { setInitialCartItems } from '@/lib/store/features/cart/cartSlice'
 import { AppStore, makeStore } from '@/lib/store/store'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Provider } from 'react-redux'
 
 
@@ -15,21 +15,22 @@ export default function StoreProvider({
   if (!storeRef.current) {
     // Create the store instance the first time this renders
     storeRef.current = makeStore()
-    // todo: set initial cart data from local storage.
-    const isLocalStorageAvailable = typeof window !== "undefined" && window.localStorage
-
-    if(isLocalStorageAvailable){
-      const cartItems = window.localStorage.getItem("cartItems")
-      try {
-          const parsedItems = JSON.parse(cartItems as string)
-          if (Array.isArray(parsedItems)) {
-           storeRef.current.dispatch(setInitialCartItems(parsedItems))
-          }
-      } catch (error) {
-          console.log(error);
-      }
-    }
   }
+
+  // Hydrate persisted cart AFTER mount so the first client render
+  // matches the server-rendered HTML (avoids hydration mismatch).
+  useEffect(() => {
+    const cartItems = window.localStorage.getItem("cartItems")
+    if (!cartItems) return
+    try {
+      const parsedItems = JSON.parse(cartItems)
+      if (Array.isArray(parsedItems)) {
+        storeRef.current?.dispatch(setInitialCartItems(parsedItems))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }, [])
 
   return <Provider store={storeRef.current}>{children}</Provider>
 }

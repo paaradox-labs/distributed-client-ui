@@ -41,7 +41,7 @@ export const cartSlice = createSlice({
           }
       },
       setInitialCartItems: (state, action: PayloadAction<CartItem[]>) => {
-        state.cartItems.push(...action.payload)
+        state.cartItems = action.payload
       },
       changeQty:(state, action: PayloadAction<{hash: string; qty: number}>) => {
           const index = state.cartItems.findIndex((item) => item.hash === action.payload.hash)

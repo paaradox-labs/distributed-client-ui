@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import OrderStatus from './components/orderStatus';
 import { Separator } from '@/components/ui/separator';
 import { Banknote, Coins, LayoutDashboard } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Order } from '@/lib/types';
@@ -78,10 +77,6 @@ const SingleOrder = async({params}: {params: Promise<{orderId: string}>}) => {
                             <h2 className="text-base font-medium">Payment method: </h2>
                             <span className="capitalize">{order.paymentMode}</span>
                         </div>
-
-                        <Button size="lg" className="mt-6 w-full sm:w-auto bg-red-600 text-white hover:bg-red-700 cursor-pointer">
-                            Cancel Order
-                        </Button>
                     </CardContent>
                 </Card>
             </div>

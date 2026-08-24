@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import OrderSummary from './orderSummary';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
+import { useRouter } from 'next/navigation';
 import { useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { clearCart } from '@/lib/store/features/cart/cartSlice';
@@ -34,6 +35,7 @@ const formSchema = z.object({
 
 export default function CustomerForm() {
         const dispatch = useAppDispatch()
+        const router = useRouter()
         const customerForm = useForm<z.infer<typeof formSchema>>({ 
             resolver: standardSchemaResolver(formSchema)
         })
@@ -61,15 +63,15 @@ export default function CustomerForm() {
         },
         retry: 3,
         onSuccess: (data: {paymentUrl: string | null}) => {
-            if(data.paymentUrl){
-                window.location.href = data.paymentUrl
-            }
-
-            alert("Order placed successfully")
             dispatch(clearCart())
 
-            // todo: redirect on cash payment mode
-            // todo: 1. Clear the cart from store. 2. Redirect the user to order status page.
+            if (data.paymentUrl) {
+                window.location.href = data.paymentUrl
+                return
+            }
+
+            // Cash on delivery: go straight to the orders page
+            router.push("/orders")
         }
     }) 
 
