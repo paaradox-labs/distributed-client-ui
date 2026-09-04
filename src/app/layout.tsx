@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Manrope} from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -53,6 +54,11 @@ export default function RootLayout({
         <Toaster />
           </Refresher>
          </QueryProvider>
+         <Script
+           src="https://static.cloudflareinsights.com/beacon.min.js"
+           strategy="afterInteractive"
+           data-cf-beacon='{"token": "f97e4c37955c4a549773d7ede52b189c"}'
+         />
       </body>
       </StoreProvider>
     </html>
