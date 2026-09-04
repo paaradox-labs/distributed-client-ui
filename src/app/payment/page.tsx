@@ -5,8 +5,21 @@ import { Separator } from '@/components/ui/separator';
 import { ArrowLeft, CheckCircle2, CircleX, LayoutDashboard, Store } from 'lucide-react';
 import Link from 'next/link';
 import CartCleaner from '../checkout/components/cartCleaner';
+import { Suspense } from 'react';
 
-const Payment = async({searchParams}: {searchParams:  Promise<{success: string; orderId: string}>}) => {
+/**
+ * Shell is synchronous (Cache Components/PPR): searchParams is read inside
+ * the streamed <Suspense> section.
+ */
+const Payment = ({searchParams}: {searchParams:  Promise<{success: string; orderId: string}>}) => {
+    return (
+        <Suspense fallback={<div className="h-40 w-full max-w-lg mx-auto mt-16 bg-gray-50 rounded animate-pulse" />}>
+            <PaymentContent searchParams={searchParams} />
+        </Suspense>
+    );
+};
+
+const PaymentContent = async({searchParams}: {searchParams:  Promise<{success: string; orderId: string}>}) => {
 
     const params = await searchParams
     const isOrderSuccess = params.success === "true"

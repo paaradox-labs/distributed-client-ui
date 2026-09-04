@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingBag } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 
@@ -37,8 +38,34 @@ const orderStatusVariant = (status: string) => {
     }
 }
 
-const Orders = async () => {
-    
+/**
+ * Shell is synchronous (Cache Components/PPR): cookies() and the uncached
+ * orders fetch happen inside the streamed <Suspense> section.
+ */
+const Orders = () => {
+    return (
+        <div className="max-w-6xl mx-auto px-4 md:px-8 mt-8 mb-12">
+            <Suspense
+                fallback={
+                    <Card>
+                        <CardHeader className="px-6 md:px-8">
+                            <CardTitle className="text-2xl">Orders</CardTitle>
+                            <CardDescription className="text-base">My complete order history.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="px-6 md:px-8">
+                            <div className="h-64 bg-gray-50 rounded animate-pulse" />
+                        </CardContent>
+                    </Card>
+                }
+            >
+                <OrdersContent />
+            </Suspense>
+        </div>
+    );
+};
+
+const OrdersContent = async () => {
+
     const response = await fetch (`${process.env.BACKEND_URL}/api/order/orders/mine`, {
         headers: {
             "Authorization": `Bearer ${(await cookies()).get("accessToken")?.value}`
@@ -52,8 +79,7 @@ const Orders = async () => {
     const orders: Order[] = ((await response.json()) || []).sort((a: Order, b: Order) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()); 
     
     return (
-        <div className="max-w-6xl mx-auto px-4 md:px-8 mt-8 mb-12">
-            <Card>
+        <Card>
                 <CardHeader className="px-6 md:px-8">
                     <CardTitle className="text-2xl">Orders</CardTitle>
                     <CardDescription className="text-base">My complete order history.</CardDescription>
@@ -139,7 +165,6 @@ const Orders = async () => {
                     )}
                 </CardContent>
             </Card>
-        </div>
     );
 };
 

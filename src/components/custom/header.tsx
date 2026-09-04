@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Suspense } from "react"
 import { Phone } from "lucide-react"
 import { Button } from "../ui/button"
 import MobileMenu from "./mobile-menu"
@@ -8,10 +9,42 @@ import { getSession } from "@/lib/session"
 import { getTenants } from "@/lib/data/catalog"
 import Logout from "./logout"
 
-const Header = async () => {
+/**
+ * Session-dependent section (Login/Logout). `getSession()` reads cookies(),
+ * a runtime API, so it must stream behind <Suspense> for the shell to
+ * prerender. `getSession()` is wrapped in React cache, so this and
+ * MobileSessionSection share a single request per page render.
+ */
+const SessionSection = async () => {
+    const session = await getSession()
+    return session ? (
+        <Logout />
+    ) : (
+        <Button asChild className="h-9 sm:h-10 px-4 sm:px-6 rounded-full font-semibold">
+            <Link href={`/login`}>Login</Link>
+        </Button>
+    )
+}
 
-    const [session, restaurants] = await Promise.all([getSession(), getTenants()])
-  
+const MobileSessionSection = async () => {
+    const session = await getSession()
+    return <MobileMenu isLoggedIn={!!session} />
+}
+
+/** Tenant selector — depends on the (cached) tenants fetch and useSearchParams. */
+const TenantSection = async () => {
+    const restaurants = await getTenants()
+    return <TenantSelector restaurants={{ data: restaurants }} />
+}
+
+/** Runtime-free fallback for MobileMenu (which uses useSearchParams). */
+const MobileMenuSkeleton = () => (
+    <div className="md:hidden">
+        <div className="h-10 w-10 rounded-md bg-gray-100 animate-pulse" />
+    </div>
+)
+
+const Header = () => {
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
@@ -32,7 +65,9 @@ const Header = async () => {
     />
 </svg>
           </Link>
-          <TenantSelector restaurants={{ data: restaurants }} />
+          <Suspense fallback={null}>
+            <TenantSection />
+          </Suspense>
         </div>
 
         {/* Desktop & Tablet Navigation (md:flex) */}
@@ -52,22 +87,20 @@ const Header = async () => {
             <Phone className="h-4 w-4 text-primary" />
             <span>+91 9800 098 998</span>
           </div>
-          {
-            session ? (
-              <Logout />
-            ) : (
-              <Button asChild className="h-9 sm:h-10 px-4 sm:px-6 rounded-full font-semibold">
-            <Link
-            href={`/login`}
-            >
-              Login
-            </Link>
-          </Button>
-            )
-          }
+          <Suspense
+            fallback={
+              <Button className="h-9 sm:h-10 px-4 sm:px-6 rounded-full font-semibold">
+                Login
+              </Button>
+            }
+          >
+            <SessionSection />
+          </Suspense>
         </div>
 
-        <MobileMenu isLoggedIn={!!session} />
+        <Suspense fallback={<MobileMenuSkeleton />}>
+          <MobileSessionSection />
+        </Suspense>
       </nav>
     </header>
   )

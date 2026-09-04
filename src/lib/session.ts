@@ -1,9 +1,10 @@
 import { cookies } from "next/headers"
+import { cache } from "react"
 import type { Session, User } from "./types"
 
-export const getSession = async() => {
+export const getSession = cache(async () => {
     return await getSelf()
-}
+})
 
 const getSelf  = async(): Promise<Session | null> => {
     const accessToken = (await cookies()).get("accessToken")?.value

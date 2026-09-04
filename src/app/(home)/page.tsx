@@ -4,9 +4,13 @@ import ProductList from "./components/product-list";
 import ProductsSkeleton from "./components/products-skeleton";
 import { Suspense } from "react";
 
-export default async function Home({searchParams}: {searchParams: Promise<{restaurantId: string}>}) {
+/**
+ * Shell is synchronous so it can be prerendered into the static shell
+ * (Cache Components/PPR). The only runtime read — searchParams — happens
+ * inside the streamed <Suspense> section below.
+ */
+export default function Home({searchParams}: {searchParams: Promise<{restaurantId: string}>}) {
 
-  const { restaurantId } = await searchParams
   return (
     <>
       <section className="bg-white overflow-hidden">
@@ -43,8 +47,13 @@ export default async function Home({searchParams}: {searchParams: Promise<{resta
         </div>
       </section>  
       <Suspense fallback={<ProductsSkeleton />}>
-      <ProductList restaurantId={restaurantId}/> 
+      <ProductListSection searchParams={searchParams}/>
       </Suspense>
     </>
   );
+}
+
+async function ProductListSection({searchParams}: {searchParams: Promise<{restaurantId: string}>}) {
+  const { restaurantId } = await searchParams
+  return <ProductList restaurantId={restaurantId}/>
 }

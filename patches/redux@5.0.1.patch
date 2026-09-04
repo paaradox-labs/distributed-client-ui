@@ -1,0 +1,47 @@
+diff --git a/dist/cjs/redux.cjs b/dist/cjs/redux.cjs
+index 107b42a5af8a678d574ca02f19ad64567c047667..db750be50fc31ef8854b2274224e2c4f4c89b202 100644
+--- a/dist/cjs/redux.cjs
++++ b/dist/cjs/redux.cjs
+@@ -42,7 +42,8 @@ var $$observable = /* @__PURE__ */ (() => typeof Symbol === "function" && Symbol
+ var symbol_observable_default = $$observable;
+ 
+ // src/utils/actionTypes.ts
+-var randomString = () => Math.random().toString(36).substring(7).split("").join(".");
++var __reduxActionTypeId = 0;
++var randomString = () => `ppr${(++__reduxActionTypeId).toString(36)}`;
+ var ActionTypes = {
+   INIT: `@@redux/INIT${/* @__PURE__ */ randomString()}`,
+   REPLACE: `@@redux/REPLACE${/* @__PURE__ */ randomString()}`,
+diff --git a/dist/redux.legacy-esm.js b/dist/redux.legacy-esm.js
+index 2589c6b2e0eabb9e52475f1e5036c3c8327e9e82..7d893b92d811738c8d406422d931ab9ab8c1def3 100644
+--- a/dist/redux.legacy-esm.js
++++ b/dist/redux.legacy-esm.js
+@@ -8,7 +8,8 @@ var $$observable = /* @__PURE__ */ (() => typeof Symbol === "function" && Symbol
+ var symbol_observable_default = $$observable;
+ 
+ // src/utils/actionTypes.ts
+-var randomString = () => Math.random().toString(36).substring(7).split("").join(".");
++var __reduxActionTypeId = 0;
++var randomString = () => `ppr${(++__reduxActionTypeId).toString(36)}`;
+ var ActionTypes = {
+   INIT: `@@redux/INIT${/* @__PURE__ */ randomString()}`,
+   REPLACE: `@@redux/REPLACE${/* @__PURE__ */ randomString()}`,
+diff --git a/dist/redux.mjs b/dist/redux.mjs
+index 2589c6b2e0eabb9e52475f1e5036c3c8327e9e82..c7aeaf5df052084501973a86cde904f15c62c2b6 100644
+--- a/dist/redux.mjs
++++ b/dist/redux.mjs
+@@ -8,7 +8,13 @@ var $$observable = /* @__PURE__ */ (() => typeof Symbol === "function" && Symbol
+ var symbol_observable_default = $$observable;
+ 
+ // src/utils/actionTypes.ts
+-var randomString = () => Math.random().toString(36).substring(7).split("").join(".");
++// PATCHED: redux@5.0.1 uses Math.random() at module load to build the
++// @@redux/INIT, @@redux/REPLACE and PROBE_UNKNOWN_ACTION strings. Next.js
++// Cache Components (PPR) rejects unstable values evaluated during prerender.
++// These constants only need to be stable and non-colliding (the @@redux/
++// prefix guarantees that), so a deterministic counter is used instead.
++var __reduxActionTypeId = 0;
++var randomString = () => `ppr${(++__reduxActionTypeId).toString(36)}`;
+ var ActionTypes = {
+   INIT: `@@redux/INIT${/* @__PURE__ */ randomString()}`,
+   REPLACE: `@@redux/REPLACE${/* @__PURE__ */ randomString()}`,

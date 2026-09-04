@@ -4,6 +4,9 @@ const API_GATEWAY = process.env.BACKEND_URL || "https://api-pizza.adityavyas.com
 
 const nextConfig: NextConfig = {
     output: "standalone",
+    // Cache Components (PPR): static shell prerendered at build time,
+    // runtime reads (searchParams/cookies) stream behind <Suspense>.
+    cacheComponents: true,
      images: {
         // S3 images are currently served under MUTABLE keys (the same URL is
         // overwritten when a product image is updated), so we keep a moderate

@@ -5,8 +5,35 @@ import { Banknote, Coins, LayoutDashboard } from 'lucide-react';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Order } from '@/lib/types';
+import { Suspense } from 'react';
 
-const SingleOrder = async({params}: {params: Promise<{orderId: string}>}) => {
+/**
+ * Shell is synchronous (Cache Components/PPR): params and cookies() are
+ * read inside the streamed <Suspense> section.
+ */
+const SingleOrder = ({params}: {params: Promise<{orderId: string}>}) => {
+    return (
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+            <Suspense
+                fallback={
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Order</CardTitle>
+                            <CardDescription>Track the order status. </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="h-40 bg-gray-50 rounded animate-pulse" />
+                        </CardContent>
+                    </Card>
+                }
+            >
+                <SingleOrderContent params={params} />
+            </Suspense>
+        </div>
+    );
+};
+
+const SingleOrderContent = async({params}: {params: Promise<{orderId: string}>}) => {
     const response = await fetch(`${process.env.BACKEND_URL}/api/order/orders/${(await params).orderId}?fields=address,paymentStatus,paymentMode`,{
         headers:{
             "Authorization": `Bearer ${(await cookies()).get("accessToken")?.value}`
@@ -23,9 +50,8 @@ const SingleOrder = async({params}: {params: Promise<{orderId: string}>}) => {
 
     const order: Order = await response.json()
 
-    console.log(order);
     return (
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+        <>
             <Card>
                 <CardHeader>
                     <CardTitle>Order</CardTitle>
@@ -80,7 +106,7 @@ const SingleOrder = async({params}: {params: Promise<{orderId: string}>}) => {
                     </CardContent>
                 </Card>
             </div>
-        </div>
+        </>
     );
 };
 
