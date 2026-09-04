@@ -4,24 +4,13 @@ import { Button } from "../ui/button"
 import MobileMenu from "./mobile-menu"
 import CartCounter from "./cart-counter-wrapper"
 import TenantSelector from "./tenant-select"
-import { Tenant } from "@/lib/types"
 import { getSession } from "@/lib/session"
+import { getTenants } from "@/lib/data/catalog"
 import Logout from "./logout"
 
 const Header = async () => {
 
-    const session = await getSession()
-      const tenantResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`,{
-    next: {
-      revalidate: 3600 
-    }
-  })
-
-  if(!tenantResponse.ok){
-    throw new Error("Failed to fetch tenants")
-  }
-
-  const restaurants: {data: Tenant[]} = await tenantResponse.json();
+    const [session, restaurants] = await Promise.all([getSession(), getTenants()])
   
   return (
     <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -43,7 +32,7 @@ const Header = async () => {
     />
 </svg>
           </Link>
-          <TenantSelector restaurants={restaurants} />
+          <TenantSelector restaurants={{ data: restaurants }} />
         </div>
 
         {/* Desktop & Tablet Navigation (md:flex) */}

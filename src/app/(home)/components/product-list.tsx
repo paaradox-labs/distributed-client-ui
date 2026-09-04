@@ -1,26 +1,15 @@
 import { TabsList, TabsTrigger, TabsContent, Tabs } from '@/components/ui/tabs'
 import ProductCard from './product-card'
-import { Category, Product } from '@/lib/types'
+import { getCategories, getProducts } from '@/lib/data/catalog'
 
 const ProductList = async( {restaurantId}: {restaurantId: string } ) => {
 
-      const categoryResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`, {
-        cache: 'no-store'
-      })
-    
-      if(!categoryResponse.ok){
-        throw new Error("Failed to fetch categories")
-      }
-    
-      const categories: Category[] = await categoryResponse.json()
+      const [categories, products] = await Promise.all([
+        getCategories(),
+        getProducts(restaurantId),
+      ])
 
-      const productsResponse = await fetch(`${process.env.BACKEND_URL}/api/catalog/products?limit=100&tenantId=${restaurantId}`, {
-    cache: 'no-store'
-  })
-
-  const products: {data: Product[]} = await productsResponse.json()
-
-  if (!categories?.length || !products?.data?.length) {
+  if (!categories.length || !products.length) {
     return (
       <section>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-20 lg:py-24 text-center">
@@ -45,9 +34,9 @@ const ProductList = async( {restaurantId}: {restaurantId: string } ) => {
     </TabsList>
     {
       categories.map((category) => {
-        const filteredProducts = products?.data?.filter(
+        const filteredProducts = products.filter(
           (product) => product.category._id === category._id
-        ) ?? []
+        )
         return (
           <TabsContent key={category._id} value={category._id}>
         {filteredProducts.length > 0 ? (
