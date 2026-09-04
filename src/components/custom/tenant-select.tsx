@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Tenant } from '@/lib/types';
 import { SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem, Select } from '../ui/select'
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -9,16 +9,16 @@ import { useRouter, useSearchParams } from 'next/navigation';
 const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const router = useRouter();
     const searchParams = useSearchParams()
-    const [value, setValue] = useState(() => {
-        const urlId = searchParams.get("restaurantId")
-        return urlId || ""
-    })
+    // The URL is the single source of truth for the selected tenant, so no
+    // local state is needed and the effect below never calls setState.
+    const value = searchParams.get("restaurantId") ?? ""
 
     useEffect(() => {
         const urlId = searchParams.get("restaurantId")
         const storedId = localStorage.getItem('restaurantId')
         if (storedId && !urlId) {
-            setValue(storedId)
+            // Effects should update external systems; the URL here acts as
+            // one. The Select re-renders from the updated searchParams.
             const params = new URLSearchParams(searchParams.toString())
             params.set('restaurantId', storedId)
             router.replace(`?${params.toString()}`)
@@ -28,7 +28,6 @@ const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const handleValueChange = (value:string) => {
         localStorage.setItem('restaurantId', value)
         document.cookie = `restaurantId=${value}; path=/; max-age=${60 * 60 * 24 * 30}`
-        setValue(value)
         router.push(`/?restaurantId=${value}`)
     }
 
