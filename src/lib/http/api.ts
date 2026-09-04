@@ -2,7 +2,9 @@ import axios from "axios";
 import { CouponCodeData, OrderData } from "../types";
 
 export const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    // Same-origin base: the storefront ingress routes /api/* to the backing
+    // services, so no NEXT_PUBLIC_* env is needed in the browser bundle.
+    baseURL: "",
     withCredentials: true,
     headers:{
         "Content-Type": "application/json",

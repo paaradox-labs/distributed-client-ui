@@ -11,7 +11,10 @@ const ToppingList = ({selectedToppings, handleCheckBoxCheck}:{selectedToppings: 
 
     useEffect(() => {
         const fetchData = async() => {
-        const toppingResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/catalog/toppings?tenantId=${searchParams.get("restaurantId")}`)
+        // Same-origin path - the storefront ingress routes /api/catalog to the
+        // catalog service (NEXT_PUBLIC_* vars are inlined at build time, so a
+        // build without them would produce "undefined/api/..." here).
+        const toppingResponse = await fetch(`/api/catalog/toppings?tenantId=${searchParams.get("restaurantId")}`)
         const toppings = await toppingResponse.json()
         setToppings(toppings)
         }

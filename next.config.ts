@@ -8,13 +8,12 @@ const nextConfig: NextConfig = {
     // runtime reads (searchParams/cookies) stream behind <Suspense>.
     cacheComponents: true,
      images: {
-        // S3 images are currently served under MUTABLE keys (the same URL is
-        // overwritten when a product image is updated), so we keep a moderate
-        // TTL: the image optimizer re-fetches from S3 at most this often and
-        // browsers cache the optimized result for the same period.
-        // Once the backend switches to immutable, content-hashed S3 keys,
-        // raise this to 31536000 (1 year) for fully CDN-like behavior.
-        minimumCacheTTL: 3600,
+        // Product/topping images live on S3 under IMMUTABLE keys (every upload
+        // gets a fresh UUID and the previous object is deleted), so optimized
+        // URLs are stable forever - safe to let browsers cache them for a year.
+        // This turns the first modal open into the only full fetch; every
+        // later open is served straight from the browser cache.
+        minimumCacheTTL: 31536000,
         remotePatterns: [
             {
                 protocol: "https",
