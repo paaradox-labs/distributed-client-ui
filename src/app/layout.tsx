@@ -54,11 +54,11 @@ export default function RootLayout({
         <Toaster />
           </Refresher>
          </QueryProvider>
-         <Script
-           src="https://static.cloudflareinsights.com/beacon.min.js"
-           strategy="afterInteractive"
-           data-cf-beacon='{"token": "f97e4c37955c4a549773d7ede52b189c"}'
-         />
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon='{"token": "47d6cd5fa8434e848bda85becbbac40c"}'
+          />
       </body>
       </StoreProvider>
     </html>
