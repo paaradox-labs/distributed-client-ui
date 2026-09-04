@@ -17,14 +17,21 @@ import type { Category, Product, Tenant } from "@/lib/types"
  * the next revalidation once the backend is reachable again.
  */
 const CACHE_LIFE = { stale: 60, revalidate: 60, expire: 60 } as const
-const FAILURE_CACHE_LIFE = { stale: 0, revalidate: 0, expire: 30 } as const
+// Positive `revalidate` matters: with 0 the failed entry is instantly stale
+// and prerendering loop-retries until it times out.
+const FAILURE_CACHE_LIFE = { stale: 0, revalidate: 10, expire: 30 } as const
+
+// Same fallback convention as next.config.ts (API_GATEWAY): CI and Docker
+// builds run without .env.local, so unset BACKEND_URL falls back to the
+// production gateway instead of making the build fail.
+const BACKEND_URL = process.env.BACKEND_URL ?? "https://api-pizza.adityavyas.com"
 
 export async function getCategories(): Promise<Category[]> {
     "use cache"
     cacheTag("catalog")
 
     try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/catalog/categories`)
+        const response = await fetch(`${BACKEND_URL}/api/catalog/categories`)
         if (!response.ok) {
             throw new Error("Failed to fetch categories")
         }
@@ -43,7 +50,7 @@ export async function getProducts(tenantId: string): Promise<Product[]> {
 
     try {
         const response = await fetch(
-            `${process.env.BACKEND_URL}/api/catalog/products?limit=100&tenantId=${tenantId}`
+            `${BACKEND_URL}/api/catalog/products?limit=100&tenantId=${tenantId}`
         )
         if (!response.ok) {
             throw new Error("Failed to fetch products")
@@ -63,7 +70,7 @@ export async function getTenants(): Promise<Tenant[]> {
     cacheTag("tenants")
 
     try {
-        const response = await fetch(`${process.env.BACKEND_URL}/api/auth/tenants?perPage=100`)
+        const response = await fetch(`${BACKEND_URL}/api/auth/tenants?perPage=100`)
         if (!response.ok) {
             throw new Error("Failed to fetch tenants")
         }
