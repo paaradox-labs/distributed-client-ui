@@ -50,7 +50,7 @@ export async function getProducts(tenantId: string): Promise<Product[]> {
 
     try {
         const response = await fetch(
-            `${BACKEND_URL}/api/catalog/products?limit=100&tenantId=${tenantId}`
+            `${BACKEND_URL}/api/catalog/products?limit=100&tenantId=${tenantId}&isPublish=true`
         )
         if (!response.ok) {
             throw new Error("Failed to fetch products")

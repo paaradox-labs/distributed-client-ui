@@ -42,7 +42,12 @@ export async function POST(request: NextRequest) {
     }
 
     for (const tag of tags) {
-        revalidateTag(tag, "max")
+        // `expire: 0` = never serve stale content after this webhook: the next
+        // request blocks on a fresh fetch. This is the documented pattern for
+        // external webhook-driven invalidation (see revalidateTag docs).
+        // ('max' would use stale-while-revalidate with a 1-year stale window,
+        // serving one outdated response before the fresh data lands.)
+        revalidateTag(tag, { expire: 0 })
     }
 
     return Response.json({ revalidated: true, tags, now: Date.now() })
