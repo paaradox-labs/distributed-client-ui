@@ -11,14 +11,14 @@ const TenantSelector = ({restaurants}: {restaurants: {data: Tenant[]}}) => {
     const searchParams = useSearchParams()
     const [value, setValue] = useState(() => {
         const urlId = searchParams.get("restaurantId")
-        const storedId = typeof window !== 'undefined' ? localStorage.getItem('restaurantId') : null
-        return urlId || storedId || ""
+        return urlId || ""
     })
 
     useEffect(() => {
         const urlId = searchParams.get("restaurantId")
         const storedId = localStorage.getItem('restaurantId')
         if (storedId && !urlId) {
+            setValue(storedId)
             const params = new URLSearchParams(searchParams.toString())
             params.set('restaurantId', storedId)
             router.replace(`?${params.toString()}`)
