@@ -20,10 +20,10 @@ export default function Home({searchParams}: {searchParams: Promise<{restaurantI
             <div className="flex-1 text-center md:text-left max-w-xl lg:max-w-2xl">
               <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-7xl font-black font-sans leading-tight tracking-tight text-gray-900">
                 Super Delicious Pizza in <br className="hidden sm:inline" />
-                <span className="text-primary">Only 10 Minutes!</span>
+                <span className="text-primary">Only 15 Minutes!</span>
               </h1>
               <p className="text-lg sm:text-xl md:text-xl lg:text-2xl mt-4 md:mt-6 text-gray-600 leading-relaxed max-w-md mx-auto md:mx-0">
-                Enjoy a Free Meal if Your Order Takes More Than 10 Minutes!
+                Enjoy a Free Meal if Your Order Takes More Than 15 Minutes!
               </p>
               <Button className="mt-6 md:mt-8 text-base sm:text-lg rounded-full py-7 px-6 font-bold transition-all duration-200 hover:scale-105 active:scale-95 shadow-md">
                 Get your pizza now
